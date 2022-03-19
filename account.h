@@ -1,2 +1,5 @@
-int store_users(FILE *file);
-int load_users(FILE *file);
+int reg(User user);
+
+
+
+int login(User user);

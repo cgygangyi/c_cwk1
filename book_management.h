@@ -60,5 +60,29 @@ BookList find_book_by_author (const char *author);
 //list is the NULL pointer.
 BookList find_book_by_year (unsigned int year);
 
+BookList display_all(Book book);
+
+
+
+void searchCLI();
+
+
+
+typedef struct _User {
+	char *username;
+	char *password;
+	unsigned int year;
+	struct _User *next; //pointer to the next user element
+}User;
+
+typedef struct _UserList {
+	User* list; // pointer to a list of struct User.
+	unsigned int length; // number of elements in the (User*) List
+}UserList;
+
+int store_users(FILE *file);
+int load_users(FILE *file);
+int store_loans(FILE *file);
+int load_loans(FILE *file);
 
 #endif

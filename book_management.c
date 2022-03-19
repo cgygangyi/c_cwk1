@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "book_management.h"
+#include "utility.h"
 
 //saves the database of books in the specified file
 //returns 0 if books were stored correctly, or an error code otherwise
@@ -67,6 +68,59 @@ BookList find_book_by_year (unsigned int year) {
 
 
 
-BookList display_all() {
+BookList display_all(Book book) {
+
+}
+
+
+
+void librarianCLI() {
+	int searching = 1;
+	int option;
+	
+	while( searching ){
+		printf("\n Please choose an option:\n 1) Find books by title\n 2) Find books by author\n 3) Find books by year\n 4) Return to previews menu\nOption: ");
+		option = optionChoice();
+		
+		if( option == 1 ) {
+			find_book_by_title(const char *title);
+		}
+		else if( option == 2 ) {
+			find_book_by_author(const char *author);
+		}
+		else if( option == 3 ) {
+			find_book_by_year(unsigned int year);
+		}
+		else if( option == 4 ) {
+			searching = 0;
+			printf("\nReturn to previews menu...\n");
+		}
+		else
+			printf("\nSorry, the option you entered was invalid, please try again.\n");
+	}
+	return;
+}
+
+
+
+int store_users(FILE *file) {
+	
+}
+
+
+
+int load_users(FILE *file) {
+	
+}
+
+
+
+int store_loans(FILE *file) {
+	
+}
+
+
+
+int load_loans(FILE *file) {
 	
 }

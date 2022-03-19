@@ -3,27 +3,23 @@
 #include <string.h>
 
 #include "users.h"
-#include "utility.c"
+#include "utility.h"
+#include "book_management.h"
 
 
 
-int store_users(FILE *file) {
-	
+int reg(User user) {
+	printf("\nPlease enter a username: ");
+	printf("\nPlease enter a passward: ");
+	printf("\nSorry, registration unsuccessful, the username you entered already exists.\n");
+	printf("\nRegistered library account successfully!\n");
 }
 
 
 
-int load_users(FILE *file) {
-	
-}
-
-
-int register() {
-	
-}
-
-
-
-int login() {
-	
+int login(User user) {
+	printf("\nPlease enter a username: ");
+	printf("\nPlease enter a passward: ");
+	printf("\nUsername does not exist.\n");
+	printf("\nWrong password.\n");
 }
