@@ -8,8 +8,6 @@
 // Utility functions to handle "safer" string input
 //
 
-// DONT ALTER THESE FUNCTIONS
-
 // read in a line of text and convert to an integer option
 
 int optionChoice( void ) {

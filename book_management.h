@@ -11,17 +11,17 @@
 
 
 typedef struct _Book {
-	    unsigned int id; //Book ID
-		char *title; //book title
-		char *authors; //comma separated list of authors
-		unsigned int year; // year of publication
-		unsigned int copies; //number of copies the library has
-		struct _Book *next; //pointer to the next book element
+	unsigned int id; //Book ID
+	char *title; //book titlechar *title; //book title
+	char *authors; //comma separated list of authors
+	unsigned int year; // year of publication
+	unsigned int copies; //number of copies the library has
+	struct _Book *next; //pointer to the next book element
 }Book;
 
 typedef struct _BookList {
-	 Book* list; // pointer to a list of struct Book.
-	 unsigned int length; // number of elements in the (Book*) List
+	Book* list; // pointer to a list of struct Book.
+	unsigned int length; // number of elements in the (Book*) List
 }BookList;
 
 
@@ -71,7 +71,6 @@ void searchCLI();
 typedef struct _User {
 	char *username;
 	char *password;
-	unsigned int year;
 	struct _User *next; //pointer to the next user element
 }User;
 

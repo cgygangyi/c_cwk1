@@ -8,10 +8,27 @@
 
 int main( int argc, char **argv )
 {
-	//load_books();
-	//load_users(FILE *file);
-	//load_loans(FILE *file);
-	
+	FILE *fp;
+	UserList users;
+
+	fp = fopen("books.txt", "r");
+	if( fp == NULL) {
+		printf("\nError, book file does not exist.\n");
+		exit(0);
+	}
+	load_books(fp);
+	int fclose(FILE *fp);
+
+	fp = fopen("users.txt", "r");
+	if( fp == NULL) {
+		printf("\nError, user file does not exist.\n");
+		exit(0);
+	}
+	load_users(fp);
+	int fclose(FILE *fp);
+
+	load_loans(fp);
+
 	int libraryOpen = 1;
 	int option;
 	while( libraryOpen ){
@@ -19,7 +36,7 @@ int main( int argc, char **argv )
 		option = optionChoice();
 
 		if( option == 1 ) {
-			reg();
+			reg(User users);
 		}
 		else if( option == 2 ) {
 			login();

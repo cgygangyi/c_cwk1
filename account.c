@@ -10,6 +10,7 @@
 
 int reg(User user) {
 	printf("\nPlease enter a username: ");
+	gets();
 	printf("\nPlease enter a passward: ");
 	printf("\nSorry, registration unsuccessful, the username you entered already exists.\n");
 	printf("\nRegistered library account successfully!\n");
