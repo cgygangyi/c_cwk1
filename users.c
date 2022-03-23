@@ -37,7 +37,7 @@ void librarianCLI() {
 	return;
 }
 
-void userCLI() {
+void userCLI(User *theUser) {
 	int userLoggedIn = 1;
 	int option;
 

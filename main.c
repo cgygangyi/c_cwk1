@@ -4,7 +4,8 @@
 
 #include "book_management.h"
 #include "utility.h"
-#include "account.h"
+#include "reg_log.h"
+#include "users.h"
 
 int main( int argc, char **argv )
 {
@@ -39,10 +40,17 @@ int main( int argc, char **argv )
 		option = optionChoice();
 
 		if( option == 1 ) {
-			reg();
+			reg(user);
 		}
 		else if( option == 2 ) {
-			login();
+			User *name;
+			name = login(user);
+			if(strcmp(name->username, "librarian")){
+				librarianCLI();
+			}
+			else if(name){
+				userCLI(name);
+			}
 		}
 		else if( option == 3 ) {
 			printf("\nLogging search menu...\n");

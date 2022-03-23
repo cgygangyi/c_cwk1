@@ -1,5 +1,0 @@
-int reg();
-
-
-
-int login();

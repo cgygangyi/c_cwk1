@@ -10,7 +10,7 @@
 
 int load(FILE *file, Book theBook) {
 	Book *p, *last;
-	
+
 	last = theBook.next;
 	char StrLine[1024];
 	while(!feof(file))
@@ -54,7 +54,7 @@ void print(Book theBook) {
 	Book *head;
 	head = theBook.next->next;
 	printf("%-5s%-30s%-30s%-10s%-10s\n", "ID", "Title", "Authors", "years", "copies");
-	while(head!=NULL)
+	while(head != NULL)
 	{
 		//printf("\n%s\n%s\n", head->username, head->password);
 		printf("%-5d%-30s%-30s%-10d%-10d\n", head->id, head->title, head->authors, head->year, head->copies);
