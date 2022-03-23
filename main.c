@@ -8,15 +8,18 @@
 
 int main( int argc, char **argv )
 {
+	Book book;
+	book.next = (Book *)malloc(sizeof(Book));
+	User user;
+	user.next = (User *)malloc(sizeof(User));
 	FILE *fp;
-	UserList users;
 
 	fp = fopen("books.txt", "r");
 	if( fp == NULL) {
 		printf("\nError, book file does not exist.\n");
 		exit(0);
 	}
-	load_books(fp);
+	load_books(fp, book);
 	int fclose(FILE *fp);
 
 	fp = fopen("users.txt", "r");
@@ -24,7 +27,7 @@ int main( int argc, char **argv )
 		printf("\nError, user file does not exist.\n");
 		exit(0);
 	}
-	load_users(fp);
+	load_users(fp, user);
 	int fclose(FILE *fp);
 
 	load_loans(fp);
@@ -36,7 +39,7 @@ int main( int argc, char **argv )
 		option = optionChoice();
 
 		if( option == 1 ) {
-			reg(User users);
+			reg();
 		}
 		else if( option == 2 ) {
 			login();
@@ -46,7 +49,7 @@ int main( int argc, char **argv )
 			searchCLI();
 		}
 		else if( option == 4 ) {
-			display_all();
+			display_all(book);
 		}
 		else if( option == 5 ) {
 			libraryOpen = 0;

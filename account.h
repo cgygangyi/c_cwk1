@@ -1,5 +1,5 @@
-int reg(User user);
+int reg();
 
 
 
-int login(User user);
+int login();
