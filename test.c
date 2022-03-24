@@ -62,6 +62,43 @@ void print(Book theBook) {
 	}
 }
 
+int add_book(Book book) {
+	Book *head, *New;
+	char title[99];
+	char author[99];
+	char year[99];
+	char copies[99];
+	printf("Enter the title of your book you wish to add");
+	gets(title);
+	printf("Enter the author of your book you wish to add");
+	gets(author);
+	printf("Enter the year that your book you wish to add was released");
+	gets(year);
+	if(atoi(year) == 0){
+		printf("year must be a number");
+		return 1;
+	}
+	printf("Enter the the number of copies of your book you wish to add");
+	gets(copies);
+	if(atoi(copies) == 0){
+		printf("copies must be a number");
+		return 1;
+	}
+	New = (Book *)malloc(sizeof(Book));
+	New->title = (char*)malloc(sizeof(char));
+	New->authors = (char*)malloc(sizeof(char));
+	strcpy(New->title, title);
+	strcpy(New->authors, author);
+	New->year = atoi(year);
+	New->copies = atoi(copies);
+	head = book.next;
+	while(head->next != NULL){
+		head = head->next;
+	}
+	New->id = head->id + 1;
+	head->next = New;
+	New->next = NULL;
+}
 
 int main(){
 	Book theBook;
@@ -74,6 +111,8 @@ int main(){
 	}
 	load(fp, theBook);
 	int fclose(FILE *fp);
+	print(theBook);
+	add_book(theBook);
 	print(theBook);
 }
 
