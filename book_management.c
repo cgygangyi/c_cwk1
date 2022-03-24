@@ -110,7 +110,7 @@ int add_book(Book book, BookList *book_all) {
 //returns 0 if the book could be successfully removed, or an error code otherwise.
 int remove_book(Book book, BookList *book_all) {
 	display_all(book_all);
-	
+
 }
 
 
@@ -123,11 +123,12 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
 	
-	BookList byTitle;
-	byTitle.list->next = (Book *)malloc(sizeof(Book));
-	byTitle.length = 0;
+	BookList *byTitle;
+	byTitle= (BookList *)malloc(sizeof(BookList));
+	byTitle->list = (Book *)malloc(sizeof(Book));
+	byTitle->length = 0;
 	Book *p, *last;
-	last = byTitle.list->next;
+	last = byTitle->list;
 	
 	while(head != NULL){
 		if(strcmp(head->title, title) == 0){
@@ -139,15 +140,16 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 			strcpy(p->authors, head->authors);
 			p->year = head->year;
 			p->id = head->id;
+			p->copies = head->copies;
 			last->next = p;
 			last = p;
-			byTitle.length++;
+			byTitle->length++;
 		}
 		head = head->next;
 	}
 	last->next = NULL;
 	
-	return byTitle;
+	return *byTitle;
 }
 
 
@@ -157,7 +159,36 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
 //list is the NULL pointer.
 BookList find_book_by_author (const char *author, BookList *book_all) {
-
+	Book *head;
+	head = book_all->list->next;
+	
+	BookList *byAuthor;
+	byAuthor= (BookList *)malloc(sizeof(BookList));
+	byAuthor->list = (Book *)malloc(sizeof(Book));
+	byAuthor->length = 0;
+	Book *p, *last;
+	last = byAuthor->list;
+	
+	while(head != NULL){
+		if(strcmp(head->authors, author) == 0){
+			p = (Book *)malloc(sizeof(Book));
+			p->title = (char*)malloc(sizeof(char));
+			p->authors = (char*)malloc(sizeof(char));
+			p->id = head->id;
+			strcpy(p->title, head->title);
+			strcpy(p->authors, head->authors);
+			p->year = head->year;
+			p->id = head->id;
+			p->copies = head->copies;
+			last->next = p;
+			last = p;
+			byAuthor->length++;
+		}
+		head = head->next;
+	}
+	last->next = NULL;
+	
+	return *byAuthor;
 }
 
 
@@ -167,10 +198,48 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case
 //list is the NULL pointer.
 BookList find_book_by_year (unsigned int year, BookList *book_all) {
-
+	Book *head;
+	head = book_all->list->next;
+	
+	BookList *byYear;
+	byYear= (BookList *)malloc(sizeof(BookList));
+	byYear->list = (Book *)malloc(sizeof(Book));
+	byYear->length = 0;
+	Book *p, *last;
+	last = byYear->list;
+	
+	while(head != NULL){
+		if(head->year == year){
+			p = (Book *)malloc(sizeof(Book));
+			p->title = (char*)malloc(sizeof(char));
+			p->authors = (char*)malloc(sizeof(char));
+			p->id = head->id;
+			strcpy(p->title, head->title);
+			strcpy(p->authors, head->authors);
+			p->year = head->year;
+			p->id = head->id;
+			p->copies = head->copies;
+			last->next = p;
+			last = p;
+			byYear->length++;
+		}
+		head = head->next;
+	}
+	last->next = NULL;
+	
+	return *byYear;
 }
 
-
+void display_found(BookList theBook) {
+	Book *head;
+	head = theBook.list->next;
+	printf("%-5s%-30s%-30s%-10s%-10s\n", "ID", "Title", "Authors", "years", "copies");
+	while(head != NULL)
+	{
+		printf("%-5d%-30s%-30s%-10d%-10d\n", head->id, head->title, head->authors, head->year, head->copies);
+		head=head->next;
+	}
+}
 
 void display_all(BookList *book_all) {
 	Book *head;
