@@ -67,7 +67,36 @@ int load_books(FILE *file, BookList *book_all) {
 //adds a book to the ones available to the library
 //returns 0 if the book could be added, or an error code otherwise
 int add_book(Book book, BookList *book_all) {
-	Book *head, *New;
+	Book *head, *p;
+	head = book_all->list;
+	
+	while(head->next != NULL){
+		head = head->next;
+		if(strcmp(head->title, book.title) == 0){
+			printf("Sorry, there is a same book title.");
+			return 1;
+		}
+	}
+	p = (Book *)malloc(sizeof(Book));
+	p->title = (char*)malloc(sizeof(char));
+	p->authors = (char*)malloc(sizeof(char));
+	strcpy(p->title, book.title);
+	strcpy(p->authors, book.authors);
+	p->year = book.year;
+	p->copies = book.copies;
+	p->id = head->id + 1;
+	head = book_all->list;
+	while(head->next != NULL){
+		head = head->next;
+	}
+	head->next = p;
+	p->next = NULL;
+	return 0;
+}
+
+Book *add_book_input() {
+	Book *New;
+	New = (Book *)malloc(sizeof(Book));
 	char title[99];
 	char author[99];
 	char year[99];
@@ -80,28 +109,25 @@ int add_book(Book book, BookList *book_all) {
 	gets(year);
 	if(atoi(year) == 0){
 		printf("\nyear must be a number\n");
-		return 1;
+		New = NULL;
+		return New;
 	}
 	printf("Enter the the number of copies of your book you wish to add: ");
 	gets(copies);
 	if(atoi(copies) == 0){
 		printf("\ncopies must be a number\n");
-		return 1;
+		New = NULL;
+		return New;
 	}
-	New = (Book *)malloc(sizeof(Book));
+	
 	New->title = (char*)malloc(sizeof(char));
 	New->authors = (char*)malloc(sizeof(char));
 	strcpy(New->title, title);
 	strcpy(New->authors, author);
 	New->year = atoi(year);
 	New->copies = atoi(copies);
-	head = book_all->list;
-	while(head->next != NULL){
-		head = head->next;
-	}
-	New->id = head->id + 1;
-	head->next = New;
 	New->next = NULL;
+	return New;
 }
 
 
@@ -122,14 +148,14 @@ int remove_book(Book book, BookList *book_all) {
 BookList find_book_by_title (const char *title, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-	
+
 	BookList *byTitle;
 	byTitle= (BookList *)malloc(sizeof(BookList));
 	byTitle->list = (Book *)malloc(sizeof(Book));
 	byTitle->length = 0;
 	Book *p, *last;
 	last = byTitle->list;
-	
+
 	while(head != NULL){
 		if(strcmp(head->title, title) == 0){
 			p = (Book *)malloc(sizeof(Book));
@@ -148,7 +174,7 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 		head = head->next;
 	}
 	last->next = NULL;
-	
+
 	return *byTitle;
 }
 
@@ -161,14 +187,14 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 BookList find_book_by_author (const char *author, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-	
+
 	BookList *byAuthor;
 	byAuthor= (BookList *)malloc(sizeof(BookList));
 	byAuthor->list = (Book *)malloc(sizeof(Book));
 	byAuthor->length = 0;
 	Book *p, *last;
 	last = byAuthor->list;
-	
+
 	while(head != NULL){
 		if(strcmp(head->authors, author) == 0){
 			p = (Book *)malloc(sizeof(Book));
@@ -187,7 +213,7 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 		head = head->next;
 	}
 	last->next = NULL;
-	
+
 	return *byAuthor;
 }
 
@@ -200,14 +226,14 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 BookList find_book_by_year (unsigned int year, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-	
+
 	BookList *byYear;
 	byYear= (BookList *)malloc(sizeof(BookList));
 	byYear->list = (Book *)malloc(sizeof(Book));
 	byYear->length = 0;
 	Book *p, *last;
 	last = byYear->list;
-	
+
 	while(head != NULL){
 		if(head->year == year){
 			p = (Book *)malloc(sizeof(Book));
@@ -226,7 +252,7 @@ BookList find_book_by_year (unsigned int year, BookList *book_all) {
 		head = head->next;
 	}
 	last->next = NULL;
-	
+
 	return *byYear;
 }
 

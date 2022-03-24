@@ -12,7 +12,7 @@ int main( int argc, char **argv )
 	BookList *book_all;
 	book_all = (BookList *)malloc(sizeof(BookList));
 	book_all->list = (Book *)malloc(sizeof(Book));
-	
+
 	UserList *user_all;
 	user_all = (UserList *)malloc(sizeof(UserList));
 	user_all->list = (User *)malloc(sizeof(User));
@@ -21,7 +21,7 @@ int main( int argc, char **argv )
 
 	fp = fopen("books.txt", "r");
 	if( fp == NULL) {
-		printf("\nError, book file does not exist.\n");
+		printf("\nError, books file does not exist.\n");
 		exit(0);
 	}
 	load_books(fp, book_all);
@@ -29,7 +29,7 @@ int main( int argc, char **argv )
 
 	fp = fopen("users.txt", "r");
 	if( fp == NULL) {
-		printf("\nError, user file does not exist.\n");
+		printf("\nError, users file does not exist.\n");
 		exit(0);
 	}
 	load_users(fp, user_all);
@@ -37,13 +37,13 @@ int main( int argc, char **argv )
 
 	fp = fopen("loans.txt", "r");
 	if( fp == NULL) {
-		printf("\nError, user file does not exist.\n");
+		printf("\nError, loans file does not exist.\n");
 		exit(0);
 	}
 	load_loans(fp);
 	fclose(fp);
-	
-	
+
+
 	int libraryOpen = 1;
 	int option;
 	while( libraryOpen ){

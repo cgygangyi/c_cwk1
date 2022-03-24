@@ -40,6 +40,8 @@ int load_books(FILE *file, BookList *book_all);
 //returns 0 if the book could be added, or an error code otherwise
 int add_book(Book book, BookList *book_all);
 
+Book *add_book_input();
+
 //removes a book from the library
 //returns 0 if the book could be successfully removed, or an error code otherwise.
 int remove_book(Book book, BookList *book_all);
