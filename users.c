@@ -7,7 +7,7 @@
 
 
 
-void librarianCLI() {
+void librarianCLI(BookList *book_all) {
 	int librarianLoggedIn = 1;
 	int option;
 
@@ -16,13 +16,14 @@ void librarianCLI() {
 		option = optionChoice();
 
 		if( option == 1 ) {
-			add_book(Book book);
+			
+			add_book(Book book, book_all);
 		}
 		else if( option == 2 ) {
 			remove_book(Book book);
 		}
 		else if( option == 3 ) {
-			printf("\nLibrarian login\n");
+			searchCLI();
 		}
 		else if( option == 4 ) {
 			printf("\nLibrarian login\n");
@@ -37,7 +38,7 @@ void librarianCLI() {
 	return;
 }
 
-void userCLI(User *theUser) {
+void userCLI(UserList *user_all) {
 	int userLoggedIn = 1;
 	int option;
 

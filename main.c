@@ -9,10 +9,14 @@
 
 int main( int argc, char **argv )
 {
-	Book book;
-	book.next = (Book *)malloc(sizeof(Book));
-	User user;
-	user.next = (User *)malloc(sizeof(User));
+	BookList *book_all;
+	book_all = (BookList *)malloc(sizeof(BookList));
+	book_all->list = (Book *)malloc(sizeof(Book));
+	
+	UserList *user_all;
+	user_all = (UserList *)malloc(sizeof(UserList));
+	user_all->list = (User *)malloc(sizeof(User));
+
 	FILE *fp;
 
 	fp = fopen("books.txt", "r");
@@ -20,19 +24,26 @@ int main( int argc, char **argv )
 		printf("\nError, book file does not exist.\n");
 		exit(0);
 	}
-	load_books(fp, book);
-	int fclose(FILE *fp);
+	load_books(fp, book_all);
+	fclose(fp);
 
 	fp = fopen("users.txt", "r");
 	if( fp == NULL) {
 		printf("\nError, user file does not exist.\n");
 		exit(0);
 	}
-	load_users(fp, user);
-	int fclose(FILE *fp);
+	load_users(fp, user_all);
+	fclose(fp);
 
+	fp = fopen("loans.txt", "r");
+	if( fp == NULL) {
+		printf("\nError, user file does not exist.\n");
+		exit(0);
+	}
 	load_loans(fp);
-
+	fclose(fp);
+	
+	
 	int libraryOpen = 1;
 	int option;
 	while( libraryOpen ){
@@ -40,11 +51,11 @@ int main( int argc, char **argv )
 		option = optionChoice();
 
 		if( option == 1 ) {
-			reg(user);
+			reg(user_all);
 		}
 		else if( option == 2 ) {
 			User *name;
-			name = login(user);
+			name = login(user_all);
 			if(strcmp(name->username, "librarian")){
 				librarianCLI();
 			}
@@ -57,7 +68,7 @@ int main( int argc, char **argv )
 			searchCLI();
 		}
 		else if( option == 4 ) {
-			display_all(book);
+			display_all(book_all);
 		}
 		else if( option == 5 ) {
 			libraryOpen = 0;

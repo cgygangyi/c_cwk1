@@ -8,10 +8,10 @@
 #define CreateNode(p)  p=(Book *)malloc(sizeof(Book));
 #define DeleteNode(p)   free((void *)p);
 
-int load(FILE *file, Book theBook) {
+int load(FILE *file, BookList *book_all) {
 	Book *p, *last;
 
-	last = theBook.next;
+	last = book_all->list;
 	char StrLine[1024];
 	while(!feof(file))
 	{
@@ -50,9 +50,21 @@ int load(FILE *file, Book theBook) {
 	return 0;
 }
 
-void print(Book theBook) {
+void print(BookList *book_all) {
 	Book *head;
-	head = theBook.next->next;
+	head = book_all->list->next;
+	printf("%-5s%-30s%-30s%-10s%-10s\n", "ID", "Title", "Authors", "years", "copies");
+	while(head != NULL)
+	{
+		//printf("\n%s\n%s\n", head->username, head->password);
+		printf("%-5d%-30s%-30s%-10d%-10d\n", head->id, head->title, head->authors, head->year, head->copies);
+		head=head->next;
+	}
+}
+
+/*void print2(BookList theBook) {
+	Book *head;
+	head = theBook.list->next->next;
 	printf("%-5s%-30s%-30s%-10s%-10s\n", "ID", "Title", "Authors", "years", "copies");
 	while(head != NULL)
 	{
@@ -100,20 +112,59 @@ int add_book(Book book) {
 	New->next = NULL;
 }
 
+BookList find_book_by_title (const char *title, Book book) {
+	Book *head;
+	head = book.next->next;
+	
+	BookList byTitle;
+	byTitle.list->next = (Book *)malloc(sizeof(Book));
+	byTitle.length = 0;
+	Book *p, *last;
+	last = byTitle.list->next;
+	
+	while(head != NULL){
+		if(strcmp(head->title, title) == 0){
+			p = (Book *)malloc(sizeof(Book));
+			p->title = (char*)malloc(sizeof(char));
+			p->authors = (char*)malloc(sizeof(char));
+			p->id = head->id;
+			strcpy(p->title, head->title);
+			strcpy(p->authors, head->authors);
+			p->year = head->year;
+			p->id = head->id;
+			last->next = p;
+			last = p;
+			byTitle.length++;
+		}
+		head = head->next;
+	}
+	last->next = NULL;
+	
+	return byTitle;
+}*/
+
 int main(){
-	Book theBook;
-	theBook.next = (Book *)malloc(sizeof(Book));
+	BookList *book_all;
+	book_all = (BookList *)malloc(sizeof(BookList));
+	book_all->list = (Book *)malloc(sizeof(Book));
+	BookList found;
 	FILE *fp;
 	fp = fopen("books.txt", "r");
 	if( fp == NULL) {
 		printf("\nError, user file does not exist.\n");
 		exit(0);
 	}
-	load(fp, theBook);
+	load(fp, book_all);
 	int fclose(FILE *fp);
-	print(theBook);
-	add_book(theBook);
-	print(theBook);
+	print(book_all);
+	//add_book(theBook);
+	//print(theBook);
+	//char *title;
+	//title = (char *)malloc(sizeof(char)*80);
+	//printf("enter");
+	//gets(title);
+	//found = find_book_by_title (title, theBook);
+	//print2(found);
 }
 
 

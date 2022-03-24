@@ -8,9 +8,9 @@
 #define CreateNode(p)  p=(Book *)malloc(sizeof(Book));
 #define DeleteNode(p)   free((void *)p);
 
-int load_users(FILE *file, User user) {
+int load_users(FILE *file, UserList *user_all) {
 	User *p, *last;
-	last = user.next;
+	last = user_all->list;
 	char StrLine[1024];
 	while(!feof(file))
 	{
@@ -20,13 +20,13 @@ int load_users(FILE *file, User user) {
 			p = (User *)malloc(sizeof(User));
 			p->username = (char*)malloc(sizeof(char));
 			p->password = (char*)malloc(sizeof(char));
-
+			
 			strcpy(p->username, StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->password, StrLine);
-
+			
 			last->next = p;
 			last = p;
 		}
@@ -38,12 +38,12 @@ int load_users(FILE *file, User user) {
 	return 0;
 }
 
-int reg(User user) {
+int reg(UserList *user_all) {
 	char enteredname[30];
 	char enteredpass[30];
-
+	
 	User *head, *New;
-	head = user.next;
+	head = user_all->list;
 	printf("\nPlease enter a username: ");
 	gets(enteredname);
 	if(strcmp(enteredname, "librarian")==0){
@@ -64,13 +64,13 @@ int reg(User user) {
 	New->password = (char*)malloc(sizeof(char));
 	strcpy(New->username, enteredname);
 	strcpy(New->password, enteredpass);
-	head = user.next;
+	head = user_all->list;
 	while(head->next != NULL){
 		head = head->next;
 	}
 	head->next = New;
 	New->next = NULL;
-
+	
 	printf("\nRegistered library account successfully!\n");
 }
 
@@ -86,12 +86,12 @@ void print(Book theBook) {
 	}
 }
 
-User *login(User user) {
+User *login(UserList *user_all) {
 	char enteredname[30];
 	char enteredpass[30];
 	char password[30];
 	User *head;
-	head = user.next->next;
+	head = user_all->list->next;
 	
 	printf("\nPlease enter a username: ");
 	gets(enteredname);
@@ -123,25 +123,26 @@ User *login(User user) {
 }
 
 int main(){
-	User user;
+	UserList *user_all;
+	user_all = (UserList *)malloc(sizeof(UserList));
+	user_all->list = (User *)malloc(sizeof(User));
 	User *head;
-	user.next = (User *)malloc(sizeof(User));
 	FILE *fp;
 	fp = fopen("users.txt", "r");
 	if( fp == NULL) {
 		printf("\nError, user file does not exist.\n");
 		exit(0);
 	}
-	load_users(fp, user);
+	load_users(fp, user_all);
 	int fclose(FILE *fp);
-	reg(user);
-	head = user.next->next;
+	reg(user_all);
+	head = user_all->list->next;
 	while(head != NULL)
 	{
 		printf("\n%s\n%s\n", head->username, head->password);
 		head=head->next;
 	}
-	printf("%s", login(user)->username);
+	printf("%s", login(user_all)->username);
 }
 
 

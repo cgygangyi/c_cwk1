@@ -8,12 +8,12 @@
 
 
 
-int reg(User user) {
+int reg(UserList *user_all) {
 	char enteredname[30];
 	char enteredpass[30];
 
 	User *head, *New;
-	head = user.next;
+	head = user_all->list;
 	printf("\nPlease enter a username: ");
 	gets(enteredname);
 	if(strcmp(enteredname, "librarian")==0){
@@ -34,7 +34,7 @@ int reg(User user) {
 	New->password = (char*)malloc(sizeof(char));
 	strcpy(New->username, enteredname);
 	strcpy(New->password, enteredpass);
-	head = user.next;
+	head = user_all->list;
 	while(head->next != NULL){
 		head = head->next;
 	}
@@ -46,13 +46,13 @@ int reg(User user) {
 
 
 
-User *login(User user) {
+User *login(UserList *user_all) {
 	char enteredname[30];
 	char enteredpass[30];
 	char password[30];
 	User *head;
-	head = user.next->next;
-	
+	head = user_all->list->next;
+
 	printf("\nPlease enter a username: ");
 	gets(enteredname);
 	if(strcmp(enteredname, "librarian") == 0){
