@@ -11,7 +11,7 @@
 int reg(User user) {
 	char enteredname[30];
 	char enteredpass[30];
-	
+
 	User *head, *New;
 	head = user.next;
 	printf("\nPlease enter a username: ");
@@ -40,7 +40,7 @@ int reg(User user) {
 	}
 	head->next = New;
 	New->next = NULL;
-	
+
 	printf("\nRegistered library account successfully!\n");
 }
 
@@ -52,32 +52,32 @@ User *login(User user) {
 	char password[30];
 	User *head;
 	head = user.next->next;
-
+	
 	printf("\nPlease enter a username: ");
-	scanf("%s", &enteredname);
-	while(head != NULL){
-		if(strcmp(head->username, enteredname)){
-			strcpy(password, head->password);
-			break;
-		}
-		head = head->next;
-	}
+	gets(enteredname);
 	if(strcmp(enteredname, "librarian") == 0){
 		strcpy(password, "librarian");
+	}
+	else if(1){
+		while(head != NULL){
+			if(strcmp(head->username, enteredname)==0){
+				strcpy(password, head->password);
+				break;
+			}
+			head = head->next;
+		}
 	}
 	else {
 		printf("\nUsername does not exist.\n");
 		return NULL;
 	}
 	printf("\nPlease enter a passward: ");
-	scanf("%s", &enteredpass);
+	gets(enteredpass);
 	if(strcmp(enteredpass, password) == 0){
-		strcpy(password, "librarian");
+		return head;
 	}
 	else {
 		printf("\nWrong password.\n");
 	}
-
-	return 0;
-
+	return NULL;
 }

@@ -20,13 +20,13 @@ int load_users(FILE *file, User user) {
 			p = (User *)malloc(sizeof(User));
 			p->username = (char*)malloc(sizeof(char));
 			p->password = (char*)malloc(sizeof(char));
-			
+
 			strcpy(p->username, StrLine);
-			
+
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->password, StrLine);
-			
+
 			last->next = p;
 			last = p;
 		}
@@ -41,7 +41,7 @@ int load_users(FILE *file, User user) {
 int reg(User user) {
 	char enteredname[30];
 	char enteredpass[30];
-	
+
 	User *head, *New;
 	head = user.next;
 	printf("\nPlease enter a username: ");
@@ -70,7 +70,7 @@ int reg(User user) {
 	}
 	head->next = New;
 	New->next = NULL;
-	
+
 	printf("\nRegistered library account successfully!\n");
 }
 
@@ -86,6 +86,41 @@ void print(Book theBook) {
 	}
 }
 
+User *login(User user) {
+	char enteredname[30];
+	char enteredpass[30];
+	char password[30];
+	User *head;
+	head = user.next->next;
+	
+	printf("\nPlease enter a username: ");
+	gets(enteredname);
+	if(strcmp(enteredname, "librarian") == 0){
+		strcpy(password, "librarian");
+	}
+	else if(1){
+		while(head != NULL){
+			if(strcmp(head->username, enteredname)==0){
+				strcpy(password, head->password);
+				break;
+			}
+			head = head->next;
+		}
+	}
+	else {
+		printf("\nUsername does not exist.\n");
+		return NULL;
+	}
+	printf("\nPlease enter a passward: ");
+	gets(enteredpass);
+	if(strcmp(enteredpass, password) == 0){
+		return head;
+	}
+	else {
+		printf("\nWrong password.\n");
+	}
+	return NULL;
+}
 
 int main(){
 	User user;
@@ -106,14 +141,15 @@ int main(){
 		printf("\n%s\n%s\n", head->username, head->password);
 		head=head->next;
 	}
+	printf("%s", login(user)->username);
 }
 
 
 
 void removeNewLine(char* string) {
-	
+
 	size_t length = strlen(string);
-	
+
 	if((length > 0) && (string[length-1] == '\n')) {
 		string[length-1] ='\0';
 	}
