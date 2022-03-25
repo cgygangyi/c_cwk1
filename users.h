@@ -1,3 +1,3 @@
-void librarianCLI();
-void userCLI(User *theUser);
+void librarianCLI(BookList *book_all);
+void userCLI(UserList *user_all);
 

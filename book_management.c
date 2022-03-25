@@ -35,19 +35,19 @@ int load_books(FILE *file, BookList *book_all) {
 			p->title = (char*)malloc(sizeof(char));
 			p->authors = (char*)malloc(sizeof(char));
 			p->id = atoi(StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->title, StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->authors, StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			p->year = atoi(StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			p->copies = atoi(StrLine);
@@ -73,7 +73,7 @@ int add_book(Book book, BookList *book_all) {
 	while(head->next != NULL){
 		head = head->next;
 		if(strcmp(head->title, book.title) == 0){
-			printf("Sorry, there is a same book title.");
+			printf("\nSorry, there is a same book title.\n");
 			return 1;
 		}
 	}
@@ -136,7 +136,7 @@ Book *add_book_input() {
 //returns 0 if the book could be successfully removed, or an error code otherwise.
 int remove_book(Book book, BookList *book_all) {
 	display_all(book_all);
-
+	
 }
 
 
@@ -148,14 +148,14 @@ int remove_book(Book book, BookList *book_all) {
 BookList find_book_by_title (const char *title, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-
+	
 	BookList *byTitle;
 	byTitle= (BookList *)malloc(sizeof(BookList));
 	byTitle->list = (Book *)malloc(sizeof(Book));
 	byTitle->length = 0;
 	Book *p, *last;
 	last = byTitle->list;
-
+	
 	while(head != NULL){
 		if(strcmp(head->title, title) == 0){
 			p = (Book *)malloc(sizeof(Book));
@@ -174,7 +174,10 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 		head = head->next;
 	}
 	last->next = NULL;
-
+	if(byTitle->length == 0){
+		byTitle->list = NULL;
+	}
+	
 	return *byTitle;
 }
 
@@ -187,14 +190,14 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 BookList find_book_by_author (const char *author, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-
+	
 	BookList *byAuthor;
 	byAuthor= (BookList *)malloc(sizeof(BookList));
 	byAuthor->list = (Book *)malloc(sizeof(Book));
 	byAuthor->length = 0;
 	Book *p, *last;
 	last = byAuthor->list;
-
+	
 	while(head != NULL){
 		if(strcmp(head->authors, author) == 0){
 			p = (Book *)malloc(sizeof(Book));
@@ -213,7 +216,10 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 		head = head->next;
 	}
 	last->next = NULL;
-
+	if(byAuthor->length == 0){
+		byAuthor->list = NULL;
+	}
+	
 	return *byAuthor;
 }
 
@@ -226,14 +232,14 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 BookList find_book_by_year (unsigned int year, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-
+	
 	BookList *byYear;
 	byYear= (BookList *)malloc(sizeof(BookList));
 	byYear->list = (Book *)malloc(sizeof(Book));
 	byYear->length = 0;
 	Book *p, *last;
 	last = byYear->list;
-
+	
 	while(head != NULL){
 		if(head->year == year){
 			p = (Book *)malloc(sizeof(Book));
@@ -252,25 +258,33 @@ BookList find_book_by_year (unsigned int year, BookList *book_all) {
 		head = head->next;
 	}
 	last->next = NULL;
-
+	if(byYear->length == 0){
+		byYear->list = NULL;
+	}
+	
 	return *byYear;
 }
 
 void display_found(BookList theBook) {
 	Book *head;
-	head = theBook.list->next;
-	printf("%-5s%-30s%-30s%-10s%-10s\n", "ID", "Title", "Authors", "years", "copies");
-	while(head != NULL)
-	{
-		printf("%-5d%-30s%-30s%-10d%-10d\n", head->id, head->title, head->authors, head->year, head->copies);
-		head=head->next;
+	if(theBook.list == NULL){
+		printf("\nSorry, no book is found.\n");
+	}
+	else {
+		head = theBook.list->next;
+		printf("\n%-5s%-30s%-30s%-10s%-10s\n", "ID", "Title", "Authors", "years", "copies");
+		while(head != NULL)
+		{
+			printf("%-5d%-30s%-30s%-10d%-10d\n", head->id, head->title, head->authors, head->year, head->copies);
+			head=head->next;
+		}
 	}
 }
 
 void display_all(BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-	printf("%-5s%-30s%-30s%-10s%-10s\n", "ID", "Title", "Authors", "years", "copies");
+	printf("\n%-5s%-30s%-30s%-10s%-10s\n", "ID", "Title", "Authors", "years", "copies");
 	while(head!=NULL)
 	{
 		printf("%-5d%-30s%-30s%-10d%-10d\n", head->id, head->title, head->authors, head->year, head->copies);
@@ -280,32 +294,34 @@ void display_all(BookList *book_all) {
 
 
 
-void searchCLI() {
+void searchCLI(BookList *book_all) {
 	int searching = 1;
 	int option;
 	char *information;
-
+	information = (char*)malloc(sizeof(char)*1024);
+	
 	while( searching ){
 		printf("\n Please choose an option:\n 1) Find books by title\n 2) Find books by author\n 3) Find books by year\n 4) Return to previews menu\nOption: ");
 		option = optionChoice();
-
+		
 		if( option == 1 ) {
 			printf("Please enter a title: ");
 			gets(information);
-			find_book_by_title(information);
+			display_found(find_book_by_title(information, book_all));
 		}
 		else if( option == 2 ) {
 			printf("Please enter an author: ");
 			gets(information);
-			find_book_by_author(information);
+			display_found(find_book_by_author(information, book_all));
 		}
 		else if( option == 3 ) {
 			printf("Please enter a year: ");
+			gets(information);
 			if(atoi(information) == 0){
 				printf("the year must be a number.");
 			}
 			else {
-				find_book_by_year(atoi(information));
+				display_found(find_book_by_year(atoi(information), book_all));
 			}
 		}
 		else if( option == 4 ) {
@@ -321,7 +337,7 @@ void searchCLI() {
 
 
 int store_users(FILE *file) {
-
+	
 }
 
 
@@ -338,13 +354,13 @@ int load_users(FILE *file, UserList *user_all) {
 			p = (User *)malloc(sizeof(User));
 			p->username = (char*)malloc(sizeof(char));
 			p->password = (char*)malloc(sizeof(char));
-
+			
 			strcpy(p->username, StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->password, StrLine);
-
+			
 			last->next = p;
 			last = p;
 		}
@@ -359,11 +375,11 @@ int load_users(FILE *file, UserList *user_all) {
 
 
 int store_loans(FILE *file) {
-
+	
 }
 
 
 
 int load_loans(FILE *file) {
-
+	
 }

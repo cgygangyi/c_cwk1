@@ -78,6 +78,7 @@ User *login(UserList *user_all) {
 	}
 	else {
 		printf("\nWrong password.\n");
+		return NULL;
 	}
-	return NULL;
+
 }

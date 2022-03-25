@@ -68,13 +68,19 @@ void display_all(BookList *book_all);
 
 
 
-void searchCLI();
+void searchCLI(BookList *book_all);
 
+
+typedef struct _Loan {
+	unsigned int loan_id;
+	struct _Loan *next; //pointer to the next user element
+}Loan;
 
 
 typedef struct _User {
 	char *username;
 	char *password;
+	Loan* borrow;
 	struct _User *next; //pointer to the next user element
 }User;
 
@@ -82,7 +88,11 @@ typedef struct _User {
 typedef struct _UserList {
 	User* list; // pointer to a list of struct User.
 	unsigned int length; // number of elements in the (User*) List
+	
 }UserList;
+
+
+
 
 int store_users(FILE *file);
 int load_users(FILE *file, UserList *user_all);

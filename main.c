@@ -56,16 +56,19 @@ int main( int argc, char **argv )
 		else if( option == 2 ) {
 			User *name;
 			name = login(user_all);
-			if(strcmp(name->username, "librarian")){
-				librarianCLI();
+			if(name == NULL){
+				//TODO
+			}
+			else if(strcmp(name->username, "librarian")){
+				librarianCLI(book_all);
 			}
 			else if(name){
-				userCLI(name);
+				userCLI(user_all);
 			}
 		}
 		else if( option == 3 ) {
 			printf("\nLogging search menu...\n");
-			searchCLI();
+			searchCLI(book_all);
 		}
 		else if( option == 4 ) {
 			display_all(book_all);
@@ -81,6 +84,9 @@ int main( int argc, char **argv )
 	//store_books(FILE *file);
 	//store_users(FILE *file);
 	//store_loans(FILE *file);
+	
+	free(book_all);
+	free(user_all);
 
 	return 0;
 }

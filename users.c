@@ -13,6 +13,7 @@ void librarianCLI(BookList *book_all) {
 	Book *book;
 
 	while( librarianLoggedIn ){
+		printf("\n(Librarian login)");
 		printf("\n Please choose an option:\n 1) Add a book\n 2) Remove a book\n 3) Search for books\n 4) Display all books\n 5) Log out\n Option: ");
 		option = optionChoice();
 
@@ -26,10 +27,10 @@ void librarianCLI(BookList *book_all) {
 			remove_book(*book, book_all);
 		}
 		else if( option == 3 ) {
-			searchCLI();
+			searchCLI(book_all);
 		}
 		else if( option == 4 ) {
-			printf("\nLibrarian login\n");
+			display_all(book_all);
 		}
 		else if( option == 5 ) {
 			librarianLoggedIn = 0;
@@ -50,10 +51,10 @@ void userCLI(UserList *user_all) {
 		option = optionChoice();
 
 		if( option == 1 ) {
-			add_book(Book book);
+			
 		}
 		else if( option == 2 ) {
-			remove_book(Book book);
+			
 		}
 		else if( option == 3 ) {
 			printf("\nLibrarian login\n");
