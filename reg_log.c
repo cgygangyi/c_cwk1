@@ -11,7 +11,7 @@
 int reg(UserList *user_all) {
 	char enteredname[30];
 	char enteredpass[30];
-
+	
 	User *head, *New;
 	head = user_all->list;
 	printf("\nPlease enter a username: ");
@@ -40,7 +40,7 @@ int reg(UserList *user_all) {
 	}
 	head->next = New;
 	New->next = NULL;
-
+	
 	printf("\nRegistered library account successfully!\n");
 }
 
@@ -52,7 +52,7 @@ User *login(UserList *user_all) {
 	char password[30];
 	User *head;
 	head = user_all->list->next;
-
+	
 	printf("\nPlease enter a username: ");
 	gets(enteredname);
 	if(strcmp(enteredname, "librarian") == 0){
@@ -78,7 +78,6 @@ User *login(UserList *user_all) {
 	}
 	else {
 		printf("\nWrong password.\n");
-		return NULL;
 	}
-
+	return NULL;
 }

@@ -12,13 +12,13 @@ int main( int argc, char **argv )
 	BookList *book_all;
 	book_all = (BookList *)malloc(sizeof(BookList));
 	book_all->list = (Book *)malloc(sizeof(Book));
-	
+
 	UserList *user_all;
 	user_all = (UserList *)malloc(sizeof(UserList));
 	user_all->list = (User *)malloc(sizeof(User));
-	
+
 	FILE *fp;
-	
+
 	fp = fopen("books.txt", "r");
 	if( fp == NULL) {
 		printf("\nError, books file does not exist.\n");
@@ -26,7 +26,7 @@ int main( int argc, char **argv )
 	}
 	load_books(fp, book_all);
 	fclose(fp);
-	
+
 	fp = fopen("users.txt", "r");
 	if( fp == NULL) {
 		printf("\nError, users file does not exist.\n");
@@ -34,7 +34,7 @@ int main( int argc, char **argv )
 	}
 	load_users(fp, user_all);
 	fclose(fp);
-	
+
 	fp = fopen("loans.txt", "r");
 	if( fp == NULL) {
 		printf("\nError, loans file does not exist.\n");
@@ -42,14 +42,14 @@ int main( int argc, char **argv )
 	}
 	load_loans(fp);
 	fclose(fp);
-	
-	
+
+
 	int libraryOpen = 1;
 	int option;
 	while( libraryOpen ){
 		printf("\n Please choose an option:\n 1) Register an account\n 2) Login\n 3) Search for books\n 4) Display all books\n 5) Quit\n Option: ");
 		option = optionChoice();
-		
+
 		if( option == 1 ) {
 			reg(user_all);
 		}
@@ -59,11 +59,11 @@ int main( int argc, char **argv )
 			if(name == NULL){
 				//TODO
 			}
-			else if(strcmp(name->username, "librarian")){
+			else if(strcmp(name->username, "librarian") == 0){
 				librarianCLI(book_all);
 			}
 			else if(name){
-				userCLI(user_all);
+				userCLI(user_all, name);
 			}
 		}
 		else if( option == 3 ) {
@@ -80,19 +80,19 @@ int main( int argc, char **argv )
 		else
 			printf("\nSorry, the option you entered was invalid, please try again.\n");
 	}
-	
+
 	//store_books(FILE *file);
 	//store_users(FILE *file);
 	//store_loans(FILE *file);
-	
+
 	free(book_all);
 	free(user_all);
-	
+
 	return 0;
 }
 
 int store_books(FILE *file) {
-	
+
 }
 
 
@@ -113,24 +113,25 @@ int load_books(FILE *file, BookList *book_all) {
 			p->title = (char*)malloc(sizeof(char));
 			p->authors = (char*)malloc(sizeof(char));
 			p->id = atoi(StrLine);
-			
+
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->title, StrLine);
-			
+
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->authors, StrLine);
-			
+
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			p->year = atoi(StrLine);
-			
+
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			p->copies = atoi(StrLine);
 			last->next = p;
 			last = p;
+			fgets(StrLine, 1024, file);
 		}
 		else {
 			break;
@@ -147,7 +148,7 @@ int load_books(FILE *file, BookList *book_all) {
 int add_book(Book book, BookList *book_all) {
 	Book *head, *p;
 	head = book_all->list;
-	
+
 	while(head->next != NULL){
 		head = head->next;
 		if(strcmp(head->title, book.title) == 0){
@@ -197,7 +198,7 @@ Book *add_book_input() {
 		New = NULL;
 		return New;
 	}
-	
+
 	New->title = (char*)malloc(sizeof(char));
 	New->authors = (char*)malloc(sizeof(char));
 	strcpy(New->title, title);
@@ -214,7 +215,7 @@ Book *add_book_input() {
 //returns 0 if the book could be successfully removed, or an error code otherwise.
 int remove_book(Book book, BookList *book_all) {
 	display_all(book_all);
-	
+
 }
 
 
@@ -226,14 +227,14 @@ int remove_book(Book book, BookList *book_all) {
 BookList find_book_by_title (const char *title, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-	
+
 	BookList *byTitle;
 	byTitle= (BookList *)malloc(sizeof(BookList));
 	byTitle->list = (Book *)malloc(sizeof(Book));
 	byTitle->length = 0;
 	Book *p, *last;
 	last = byTitle->list;
-	
+
 	while(head != NULL){
 		if(strcmp(head->title, title) == 0){
 			p = (Book *)malloc(sizeof(Book));
@@ -255,7 +256,7 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 	if(byTitle->length == 0){
 		byTitle->list = NULL;
 	}
-	
+
 	return *byTitle;
 }
 
@@ -268,14 +269,14 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 BookList find_book_by_author (const char *author, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-	
+
 	BookList *byAuthor;
 	byAuthor= (BookList *)malloc(sizeof(BookList));
 	byAuthor->list = (Book *)malloc(sizeof(Book));
 	byAuthor->length = 0;
 	Book *p, *last;
 	last = byAuthor->list;
-	
+
 	while(head != NULL){
 		if(strcmp(head->authors, author) == 0){
 			p = (Book *)malloc(sizeof(Book));
@@ -297,7 +298,7 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 	if(byAuthor->length == 0){
 		byAuthor->list = NULL;
 	}
-	
+
 	return *byAuthor;
 }
 
@@ -310,14 +311,14 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 BookList find_book_by_year (unsigned int year, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-	
+
 	BookList *byYear;
 	byYear= (BookList *)malloc(sizeof(BookList));
 	byYear->list = (Book *)malloc(sizeof(Book));
 	byYear->length = 0;
 	Book *p, *last;
 	last = byYear->list;
-	
+
 	while(head != NULL){
 		if(head->year == year){
 			p = (Book *)malloc(sizeof(Book));
@@ -339,7 +340,7 @@ BookList find_book_by_year (unsigned int year, BookList *book_all) {
 	if(byYear->length == 0){
 		byYear->list = NULL;
 	}
-	
+
 	return *byYear;
 }
 
@@ -377,11 +378,11 @@ void searchCLI(BookList *book_all) {
 	int option;
 	char *information;
 	information = (char*)malloc(sizeof(char)*1024);
-	
+
 	while( searching ){
 		printf("\n Please choose an option:\n 1) Find books by title\n 2) Find books by author\n 3) Find books by year\n 4) Return to previews menu\nOption: ");
 		option = optionChoice();
-		
+
 		if( option == 1 ) {
 			printf("Please enter a title: ");
 			gets(information);
@@ -415,7 +416,7 @@ void searchCLI(BookList *book_all) {
 
 
 int store_users(FILE *file) {
-	
+
 }
 
 
@@ -432,41 +433,70 @@ int load_users(FILE *file, UserList *user_all) {
 			p = (User *)malloc(sizeof(User));
 			p->username = (char*)malloc(sizeof(char));
 			p->password = (char*)malloc(sizeof(char));
-			
 			strcpy(p->username, StrLine);
-			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->password, StrLine);
+			p->borrow_num = 0;
+			
+			fgets(StrLine, 1024, file);
+			removeNewLine(StrLine);
+			if(StrLine[0] != '\0'){
+				char *str = StrLine;
+				int c, bytesread;
+				p->borrow = (Loan *)malloc(sizeof(Loan));
+				Loan *pl, *lastl;
+				lastl = p->borrow;
+				while (sscanf(str, "%d%n", &c, &bytesread) > 0) {
+					p->borrow_num ++;
+					pl = (Loan *)malloc(sizeof(Loan));
+					pl->loan_id = c;
+					lastl->next = pl;
+					lastl = pl;
+					str += bytesread;
+				}
+				lastl->next = NULL;
+			}
+			
 			
 			last->next = p;
 			last = p;
+			Loan *lastl;
+			lastl = last->borrow->next;
+			while(lastl != NULL){
+				printf("%d", lastl->loan_id);
+				lastl = lastl->next;
+				
+			}
+			printf("\n%d", last->borrow_num);
+			fgets(StrLine, 1024, file);
 		}
 		else {
 			break;
 		}
 	}
 	last->next = NULL;
+	
 	return 0;
 }
 
 
 
 int store_loans(FILE *file) {
-	
+
 }
 
 
 
 int load_loans(FILE *file) {
-	
+
 }
 
 
 int reg(UserList *user_all) {
 	char enteredname[30];
 	char enteredpass[30];
-	
+
 	User *head, *New;
 	head = user_all->list;
 	printf("\nPlease enter a username: ");
@@ -495,7 +525,7 @@ int reg(UserList *user_all) {
 	}
 	head->next = New;
 	New->next = NULL;
-	
+
 	printf("\nRegistered library account successfully!\n");
 }
 
@@ -507,7 +537,7 @@ User *login(UserList *user_all) {
 	char password[30];
 	User *head;
 	head = user_all->list->next;
-	
+
 	printf("\nPlease enter a username: ");
 	gets(enteredname);
 	if(strcmp(enteredname, "librarian") == 0){
@@ -542,11 +572,11 @@ void librarianCLI(BookList *book_all) {
 	int librarianLoggedIn = 1;
 	int option;
 	Book *book;
-	
+
 	while( librarianLoggedIn ){
 		printf("\n Please choose an option:\n 1) Add a book\n 2) Remove a book\n 3) Search for books\n 4) Display all books\n 5) Log out\n Option: ");
 		option = optionChoice();
-		
+
 		if( option == 1 ) {
 			book = add_book_input();
 			if(book != NULL) {
@@ -572,19 +602,20 @@ void librarianCLI(BookList *book_all) {
 	return;
 }
 
-void userCLI(UserList *user_all) {
+void userCLI(UserList *user_all, User *name) {
 	int userLoggedIn = 1;
 	int option;
-	
+
 	while( userLoggedIn ){
+		printf("\n(logged in as: %s)", name->username);
 		printf("\n Please choose an option:\n 1) Borrow a book\n 2) Return a book\n 3) Search for books\n 4) Display all books\n 5) Log out\n Option: ");
 		option = optionChoice();
-		
+
 		if( option == 1 ) {
-			
+
 		}
 		else if( option == 2 ) {
-			
+
 		}
 		else if( option == 3 ) {
 			printf("\nLibrarian login\n");
@@ -606,22 +637,22 @@ void userCLI(UserList *user_all) {
 int optionChoice( void ) {
 	int option = -1;
 	char line[80];
-	
+
 	// read in the current line as a string
 	fgets(line,80,stdin);
-	
+
 	// atoi() converts string to integer, returns 0 if could not convert
 	option = (int)atoi(line);
-	
+
 	return option;
 }
 
 // remove newline character from the fgets() input
 
 void removeNewLine(char* string) {
-	
+
 	size_t length = strlen(string);
-	
+
 	if((length > 0) && (string[length-1] == '\n')) {
 		string[length-1] ='\0';
 	}

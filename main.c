@@ -59,11 +59,11 @@ int main( int argc, char **argv )
 			if(name == NULL){
 				//TODO
 			}
-			else if(strcmp(name->username, "librarian")){
+			else if(strcmp(name->username, "librarian") == 0){
 				librarianCLI(book_all);
 			}
 			else if(name){
-				userCLI(user_all);
+				userCLI(user_all, name);
 			}
 		}
 		else if( option == 3 ) {
@@ -84,7 +84,7 @@ int main( int argc, char **argv )
 	//store_books(FILE *file);
 	//store_users(FILE *file);
 	//store_loans(FILE *file);
-	
+
 	free(book_all);
 	free(user_all);
 
