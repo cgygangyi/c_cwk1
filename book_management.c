@@ -35,22 +35,46 @@ int load_books(FILE *file, BookList *book_all) {
 			p->title = (char*)malloc(sizeof(char));
 			p->authors = (char*)malloc(sizeof(char));
 			p->id = atoi(StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->title, StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->authors, StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			p->year = atoi(StrLine);
-
+			
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			p->copies = atoi(StrLine);
+			p->borrowed_copies = 0;
+			
+			fgets(StrLine, 1024, file);
+			removeNewLine(StrLine);
+			p->borrow = (Loan *)malloc(sizeof(Loan));
+			if(StrLine[0] != '\0'){
+				char *str = StrLine;
+				int bytesread;
+				char c[1024];
+				Loan *pl, *lastl;
+				lastl = p->borrow;
+				while (sscanf(str, "%s%n", &c, &bytesread) > 0) {
+					p->borrowed_copies ++;
+					pl = (Loan *)malloc(sizeof(Loan));
+					pl->loan_user = (char*)malloc(sizeof(char));
+					strcpy(pl->loan_user, c);
+					printf("%s\n", pl->loan_user);
+					lastl->next = pl;
+					lastl = pl;
+					str += bytesread;
+				}
+				lastl->next = NULL;
+			}
+			
 			last->next = p;
 			last = p;
 			fgets(StrLine, 1024, file);
@@ -359,29 +383,9 @@ int load_users(FILE *file, UserList *user_all) {
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->password, StrLine);
-			p->borrow_num = 0;
 			
-			fgets(StrLine, 1024, file);
-			removeNewLine(StrLine);
-			if(StrLine[0] != '\0'){
-				char *str = StrLine;
-				int c, bytesread;
-				p->borrow = (Loan *)malloc(sizeof(Loan));
-				Loan *pl, *lastl;
-				lastl = p->borrow;
-				while (sscanf(str, "%d%n", &c, &bytesread) > 0) {
-					p->borrow_num ++;
-					pl = (Loan *)malloc(sizeof(Loan));
-					pl->loan_id = c;
-					lastl->next = pl;
-					lastl = pl;
-					str += bytesread;
-				}
-				lastl->next = NULL;
-			}
 			last->next = p;
 			last = p;
-			
 			fgets(StrLine, 1024, file);
 		}
 		else {
@@ -389,25 +393,7 @@ int load_users(FILE *file, UserList *user_all) {
 		}
 	}
 	last->next = NULL;
-	last = user_all->list->next;
-	Loan *lastl;
-	lastl = last->borrow;
-	while(lastl->next != NULL){
-		printf("%d", last->borrow->next->loan_id);
-		lastl = lastl->next;
-		
-	}
+	
 	return 0;
 }
 
-
-
-int store_loans(FILE *file) {
-
-}
-
-
-
-int load_loans(FILE *file) {
-
-}

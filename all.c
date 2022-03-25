@@ -35,13 +35,6 @@ int main( int argc, char **argv )
 	load_users(fp, user_all);
 	fclose(fp);
 
-	fp = fopen("loans.txt", "r");
-	if( fp == NULL) {
-		printf("\nError, loans file does not exist.\n");
-		exit(0);
-	}
-	load_loans(fp);
-	fclose(fp);
 
 
 	int libraryOpen = 1;
@@ -129,6 +122,30 @@ int load_books(FILE *file, BookList *book_all) {
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			p->copies = atoi(StrLine);
+			p->borrowed_copies = 0;
+			
+			fgets(StrLine, 1024, file);
+			removeNewLine(StrLine);
+			p->borrow = (Loan *)malloc(sizeof(Loan));
+			if(StrLine[0] != '\0'){
+				char *str = StrLine;
+				int bytesread;
+				char c[1024];
+				Loan *pl, *lastl;
+				lastl = p->borrow;
+				while (sscanf(str, "%s%n", &c, &bytesread) > 0) {
+					p->borrowed_copies ++;
+					pl = (Loan *)malloc(sizeof(Loan));
+					pl->loan_user = (char*)malloc(sizeof(char));
+					strcpy(pl->loan_user, c);
+					printf("%s\n", pl->loan_user);
+					lastl->next = pl;
+					lastl = pl;
+					str += bytesread;
+				}
+				lastl->next = NULL;
+			}
+			
 			last->next = p;
 			last = p;
 			fgets(StrLine, 1024, file);
@@ -437,38 +454,9 @@ int load_users(FILE *file, UserList *user_all) {
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->password, StrLine);
-			p->borrow_num = 0;
-			
-			fgets(StrLine, 1024, file);
-			removeNewLine(StrLine);
-			if(StrLine[0] != '\0'){
-				char *str = StrLine;
-				int c, bytesread;
-				p->borrow = (Loan *)malloc(sizeof(Loan));
-				Loan *pl, *lastl;
-				lastl = p->borrow;
-				while (sscanf(str, "%d%n", &c, &bytesread) > 0) {
-					p->borrow_num ++;
-					pl = (Loan *)malloc(sizeof(Loan));
-					pl->loan_id = c;
-					lastl->next = pl;
-					lastl = pl;
-					str += bytesread;
-				}
-				lastl->next = NULL;
-			}
-			
-			
+
 			last->next = p;
 			last = p;
-			Loan *lastl;
-			lastl = last->borrow->next;
-			while(lastl != NULL){
-				printf("%d", lastl->loan_id);
-				lastl = lastl->next;
-				
-			}
-			printf("\n%d", last->borrow_num);
 			fgets(StrLine, 1024, file);
 		}
 		else {
@@ -476,21 +464,11 @@ int load_users(FILE *file, UserList *user_all) {
 		}
 	}
 	last->next = NULL;
-	
+
 	return 0;
 }
 
 
-
-int store_loans(FILE *file) {
-
-}
-
-
-
-int load_loans(FILE *file) {
-
-}
 
 
 int reg(UserList *user_all) {

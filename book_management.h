@@ -10,6 +10,10 @@
 */
 
 
+typedef struct _Loan {
+	char *loan_user;
+	struct _Loan *next; //pointer to the next loan element
+}Loan;
 
 typedef struct _Book {
 	unsigned int id; //Book ID
@@ -17,6 +21,8 @@ typedef struct _Book {
 	char *authors; //comma separated list of authors
 	unsigned int year; // year of publication
 	unsigned int copies; //number of copies the library has
+	unsigned int borrowed_copies; //number of users who have borrowed this book.
+	struct _Loan *borrow; //pointer to the loan struct
 	struct _Book *next; //pointer to the next book element
 }Book;
 
@@ -71,17 +77,12 @@ void display_all(BookList *book_all);
 void searchCLI(BookList *book_all);
 
 
-typedef struct _Loan {
-	unsigned int loan_id;
-	struct _Loan *next; //pointer to the next user element
-}Loan;
+
 
 
 typedef struct _User {
 	char *username;
 	char *password;
-	Loan *borrow;
-	unsigned int borrow_num;
 	struct _User *next; //pointer to the next user element
 }User;
 
@@ -96,7 +97,6 @@ typedef struct _UserList {
 
 int store_users(FILE *file);
 int load_users(FILE *file, UserList *user_all);
-int store_loans(FILE *file);
-int load_loans(FILE *file);
+
 
 #endif
