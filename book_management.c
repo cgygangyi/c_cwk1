@@ -14,7 +14,7 @@
 //saves the database of books in the specified file
 //returns 0 if books were stored correctly, or an error code otherwise
 int store_books(FILE *file) {
-
+	
 }
 
 
@@ -67,7 +67,6 @@ int load_books(FILE *file, BookList *book_all) {
 					pl = (Loan *)malloc(sizeof(Loan));
 					pl->loan_user = (char*)malloc(sizeof(char));
 					strcpy(pl->loan_user, c);
-					printf("%s\n", pl->loan_user);
 					lastl->next = pl;
 					lastl = pl;
 					str += bytesread;
@@ -84,6 +83,18 @@ int load_books(FILE *file, BookList *book_all) {
 		}
 	}
 	last->next = NULL;
+	last = book_all->list->next;
+	while(last != NULL){
+		if(last->borrowed_copies > 0){
+			Loan *lastl;
+			lastl = last->borrow->next;
+			while(lastl != NULL){
+				printf("\n%s\n", lastl->loan_user);
+				lastl = lastl->next;
+			}
+		}
+		last = last->next;
+	}
 	return 0;
 }
 
@@ -94,7 +105,7 @@ int load_books(FILE *file, BookList *book_all) {
 int add_book(Book book, BookList *book_all) {
 	Book *head, *p;
 	head = book_all->list;
-
+	
 	while(head->next != NULL){
 		head = head->next;
 		if(strcmp(head->title, book.title) == 0){
@@ -144,7 +155,7 @@ Book *add_book_input() {
 		New = NULL;
 		return New;
 	}
-
+	
 	New->title = (char*)malloc(sizeof(char));
 	New->authors = (char*)malloc(sizeof(char));
 	strcpy(New->title, title);
@@ -160,8 +171,48 @@ Book *add_book_input() {
 //removes a book from the library
 //returns 0 if the book could be successfully removed, or an error code otherwise.
 int remove_book(Book book, BookList *book_all) {
-	display_all(book_all);
+	Book *head, *before, *change;
+	head = book_all->list->next;
+	before = book_all->list;
+	while(head != NULL){
+		if(head->id == book.id){
+			if(head == book_all->list->next){
+				book_all->list->next = head->next;
+			}
+			else {
+				before->next = head->next;
+			}
+			change = head->next;
+			while(change != NULL){
+				change->id --;
+				change = change->next;
+			}
+			free(head);
+			printf("\nYou have successfully removed the book!\n");
+			return 0;
+		}
+		head = head->next;
+		before = before->next;
+	}
+	printf("\nSorry, the option you entered was invalid, please try again.\n");
+	return 1;
+	
+}
 
+Book *remove_book_input() {
+	Book *theBook;
+	theBook = (Book *)malloc(sizeof(Book));
+	char id[1024];
+	printf("\nEnter the ID number of the book you wish to remove: ");
+	gets(id);
+	if(atoi(id) == 0){
+		printf("\nyear must be a number\n");
+		theBook = NULL;
+		return theBook;
+	}
+	theBook->id = atoi(id);
+	theBook->next = NULL;
+	return theBook;
 }
 
 
@@ -173,14 +224,14 @@ int remove_book(Book book, BookList *book_all) {
 BookList find_book_by_title (const char *title, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-
+	
 	BookList *byTitle;
 	byTitle= (BookList *)malloc(sizeof(BookList));
 	byTitle->list = (Book *)malloc(sizeof(Book));
 	byTitle->length = 0;
 	Book *p, *last;
 	last = byTitle->list;
-
+	
 	while(head != NULL){
 		if(strcmp(head->title, title) == 0){
 			p = (Book *)malloc(sizeof(Book));
@@ -202,7 +253,7 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 	if(byTitle->length == 0){
 		byTitle->list = NULL;
 	}
-
+	
 	return *byTitle;
 }
 
@@ -215,14 +266,14 @@ BookList find_book_by_title (const char *title, BookList *book_all) {
 BookList find_book_by_author (const char *author, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-
+	
 	BookList *byAuthor;
 	byAuthor= (BookList *)malloc(sizeof(BookList));
 	byAuthor->list = (Book *)malloc(sizeof(Book));
 	byAuthor->length = 0;
 	Book *p, *last;
 	last = byAuthor->list;
-
+	
 	while(head != NULL){
 		if(strcmp(head->authors, author) == 0){
 			p = (Book *)malloc(sizeof(Book));
@@ -244,7 +295,7 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 	if(byAuthor->length == 0){
 		byAuthor->list = NULL;
 	}
-
+	
 	return *byAuthor;
 }
 
@@ -257,14 +308,14 @@ BookList find_book_by_author (const char *author, BookList *book_all) {
 BookList find_book_by_year (unsigned int year, BookList *book_all) {
 	Book *head;
 	head = book_all->list->next;
-
+	
 	BookList *byYear;
 	byYear= (BookList *)malloc(sizeof(BookList));
 	byYear->list = (Book *)malloc(sizeof(Book));
 	byYear->length = 0;
 	Book *p, *last;
 	last = byYear->list;
-
+	
 	while(head != NULL){
 		if(head->year == year){
 			p = (Book *)malloc(sizeof(Book));
@@ -286,7 +337,7 @@ BookList find_book_by_year (unsigned int year, BookList *book_all) {
 	if(byYear->length == 0){
 		byYear->list = NULL;
 	}
-
+	
 	return *byYear;
 }
 
@@ -383,7 +434,7 @@ int load_users(FILE *file, UserList *user_all) {
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			strcpy(p->password, StrLine);
-			
+
 			last->next = p;
 			last = p;
 			fgets(StrLine, 1024, file);
@@ -393,7 +444,7 @@ int load_users(FILE *file, UserList *user_all) {
 		}
 	}
 	last->next = NULL;
-	
+
 	return 0;
 }
 

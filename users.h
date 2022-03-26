@@ -1,3 +1,3 @@
 void librarianCLI(BookList *book_all);
-void userCLI(UserList *user_all, User *name);
+void userCLI(BookList *book_all, char *name);
 

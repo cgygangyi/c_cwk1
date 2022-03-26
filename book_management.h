@@ -52,6 +52,8 @@ Book *add_book_input();
 //returns 0 if the book could be successfully removed, or an error code otherwise.
 int remove_book(Book book, BookList *book_all);
 
+Book *remove_book_input();
+
 //finds books with a given title.
 //returns a BookList structure, where the field "list" is a list of books, or null if no book with the
 //provided title can be found. The length of the list is also recorded in the returned structure, with 0 in case

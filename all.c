@@ -47,16 +47,17 @@ int main( int argc, char **argv )
 			reg(user_all);
 		}
 		else if( option == 2 ) {
-			User *name;
-			name = login(user_all);
+			char *name;
+			name = (char*)malloc(sizeof(char));
+			strcpy(name, login(user_all));
 			if(name == NULL){
 				//TODO
 			}
-			else if(strcmp(name->username, "librarian") == 0){
+			else if(strcmp(name, "librarian") == 0){
 				librarianCLI(book_all);
 			}
 			else if(name){
-				userCLI(user_all, name);
+				userCLI(book_all, name);
 			}
 		}
 		else if( option == 3 ) {
@@ -123,7 +124,7 @@ int load_books(FILE *file, BookList *book_all) {
 			removeNewLine(StrLine);
 			p->copies = atoi(StrLine);
 			p->borrowed_copies = 0;
-			
+
 			fgets(StrLine, 1024, file);
 			removeNewLine(StrLine);
 			p->borrow = (Loan *)malloc(sizeof(Loan));
@@ -138,14 +139,13 @@ int load_books(FILE *file, BookList *book_all) {
 					pl = (Loan *)malloc(sizeof(Loan));
 					pl->loan_user = (char*)malloc(sizeof(char));
 					strcpy(pl->loan_user, c);
-					printf("%s\n", pl->loan_user);
 					lastl->next = pl;
 					lastl = pl;
 					str += bytesread;
 				}
 				lastl->next = NULL;
 			}
-			
+
 			last->next = p;
 			last = p;
 			fgets(StrLine, 1024, file);
@@ -155,6 +155,18 @@ int load_books(FILE *file, BookList *book_all) {
 		}
 	}
 	last->next = NULL;
+	last = book_all->list->next;
+	while(last != NULL){
+		if(last->borrowed_copies > 0){
+			Loan *lastl;
+			lastl = last->borrow->next;
+			while(lastl != NULL){
+				printf("\n%s\n", lastl->loan_user);
+				lastl = lastl->next;
+			}
+		}
+		last = last->next;
+	}
 	return 0;
 }
 
@@ -231,8 +243,48 @@ Book *add_book_input() {
 //removes a book from the library
 //returns 0 if the book could be successfully removed, or an error code otherwise.
 int remove_book(Book book, BookList *book_all) {
-	display_all(book_all);
+	Book *head, *before, *change;
+	head = book_all->list->next;
+	before = book_all->list;
+	while(head != NULL){
+		if(head->id == book.id){
+			if(head == book_all->list->next){
+				book_all->list->next = head->next;
+			}
+			else {
+				before->next = head->next;
+			}
+			change = head->next;
+			while(change != NULL){
+				change->id --;
+				change = change->next;
+			}
+			free(head);
+			printf("\nYou have successfully removed the book!\n");
+			return 0;
+		}
+		head = head->next;
+		before = before->next;
+	}
+	printf("\nSorry, the option you entered was invalid, please try again.\n");
+	return 1;
+	
+}
 
+Book *remove_book_input() {
+	Book *theBook;
+	theBook = (Book *)malloc(sizeof(Book));
+	char id[1024];
+	printf("\nEnter the ID number of the book you wish to remove: ");
+	gets(id);
+	if(atoi(id) == 0){
+		printf("\nyear must be a number\n");
+		theBook = NULL;
+		return theBook;
+	}
+	theBook->id = atoi(id);
+	theBook->next = NULL;
+	return theBook;
 }
 
 
@@ -509,10 +561,10 @@ int reg(UserList *user_all) {
 
 
 
-User *login(UserList *user_all) {
-	char enteredname[30];
-	char enteredpass[30];
-	char password[30];
+char *login(UserList *user_all) {
+	char enteredname[99];
+	char enteredpass[99];
+	char password[99];
 	User *head;
 	head = user_all->list->next;
 
@@ -537,7 +589,12 @@ User *login(UserList *user_all) {
 	printf("\nPlease enter a passward: ");
 	gets(enteredpass);
 	if(strcmp(enteredpass, password) == 0){
-		return head;
+		if(strcmp(password, "librarian") == 0){
+			return "librarian";
+		}
+		else {
+			return head->username;
+		}
 	}
 	else {
 		printf("\nWrong password.\n");
@@ -552,6 +609,7 @@ void librarianCLI(BookList *book_all) {
 	Book *book;
 
 	while( librarianLoggedIn ){
+		printf("\n(logged in as librarian)");
 		printf("\n Please choose an option:\n 1) Add a book\n 2) Remove a book\n 3) Search for books\n 4) Display all books\n 5) Log out\n Option: ");
 		option = optionChoice();
 
@@ -562,7 +620,11 @@ void librarianCLI(BookList *book_all) {
 			}
 		}
 		else if( option == 2 ) {
-			remove_book(*book, book_all);
+			display_all(book_all);
+			book = remove_book_input();
+			if(book != NULL){
+				remove_book(*book, book_all);
+			}
 		}
 		else if( option == 3 ) {
 			searchCLI(book_all);
@@ -580,26 +642,80 @@ void librarianCLI(BookList *book_all) {
 	return;
 }
 
-void userCLI(UserList *user_all, User *name) {
+
+int borrow_book(const char *username, BookList *book_all) {
+	char id[1024];
+	printf("\nEnter the ID number of the book you wish to loan: ");
+	gets(id);
+	if(atoi(id) == 0){
+		printf("\nyear must be a number\n");
+		return 1;
+	}
+	Book *head;
+	head = book_all->list->next;
+	while(head != NULL){
+		if(head->id == atoi(id)){
+			Loan *p, *last;
+			last = head->borrow->next;
+			while(last != NULL){
+				if(strcmp(last->loan_user, username) == 0){
+					printf("\nSorry, you already have a copy of this book on loan.\n");
+					return 1;
+				}
+				last = last->next;
+			}
+			p = (Loan *)malloc(sizeof(Loan));
+			p->loan_user = (char*)malloc(sizeof(char));
+			strcpy(p->loan_user, username);
+			last = head->borrow;
+			while(last->next != NULL){
+				last = last->next;
+			}
+			last->next = p;
+			p->next = NULL;
+			head->borrowed_copies ++;
+			head->copies --;
+			printf("\nYou have successfully borrowed the book!\n");
+			return 0;
+		}
+		head = head->next;
+	}
+	
+	printf("\nSorry, the option you entered was invalid, please try again.\n");
+	return 1;
+}
+
+
+
+int return_book(const char *username, BookList *book_all) {
+	printf("\nBelow is the list of books you are currently borrowing:");
+	printf("\nEnter the ID number of the book you wish to return: ");
+	
+	printf("\nSorry, the option you entered was invalid, please try again.\n");
+	printf("\nReturned book successfully!\n");
+}
+
+
+void userCLI(BookList *book_all, char *name) {
 	int userLoggedIn = 1;
 	int option;
 
 	while( userLoggedIn ){
-		printf("\n(logged in as: %s)", name->username);
+		printf("\n(logged in as: %s)", name);
 		printf("\n Please choose an option:\n 1) Borrow a book\n 2) Return a book\n 3) Search for books\n 4) Display all books\n 5) Log out\n Option: ");
 		option = optionChoice();
 
 		if( option == 1 ) {
-
+			borrow_book(name, book_all);
 		}
 		else if( option == 2 ) {
-
+			return_book(name, book_all);
 		}
 		else if( option == 3 ) {
-			printf("\nLibrarian login\n");
+			searchCLI(book_all);
 		}
 		else if( option == 4 ) {
-			printf("\nLibrarian login\n");
+			display_all(book_all);
 		}
 		else if( option == 5 ) {
 			userLoggedIn = 0;
@@ -610,6 +726,8 @@ void userCLI(UserList *user_all, User *name) {
 	}
 	return;
 }
+
+
 
 
 int optionChoice( void ) {
