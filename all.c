@@ -268,7 +268,7 @@ int remove_book(Book book, BookList *book_all) {
 	}
 	printf("\nSorry, the option you entered was invalid, please try again.\n");
 	return 1;
-	
+
 }
 
 Book *remove_book_input() {
@@ -411,6 +411,52 @@ BookList find_book_by_year (unsigned int year, BookList *book_all) {
 	}
 
 	return *byYear;
+}
+
+BookList find_book_by_borrower (const char *borrower, BookList *book_all) {
+	Book *head;
+	head = book_all->list->next;
+	
+	BookList *byBorrower;
+	byBorrower = (BookList *)malloc(sizeof(BookList));
+	byBorrower->list = (Book *)malloc(sizeof(Book));
+	byBorrower->length = 0;
+	Book *p, *last;
+	last = byBorrower->list;
+	
+	Loan *headl;
+	
+	while(head != NULL){
+		if(head->borrowed_copies > 0){
+			headl = head->borrow->next;
+			while(headl != NULL){
+				if(strcmp(headl->loan_user, borrower) == 0){
+					p = (Book *)malloc(sizeof(Book));
+					p->title = (char*)malloc(sizeof(char));
+					p->authors = (char*)malloc(sizeof(char));
+					p->id = head->id;
+					strcpy(p->title, head->title);
+					strcpy(p->authors, head->authors);
+					p->year = head->year;
+					p->id = head->id;
+					p->copies = head->copies;
+					last->next = p;
+					last = p;
+					byBorrower->length++;
+					break;
+				}
+				headl = headl->next;
+			}
+		}
+		head = head->next;
+	}
+	
+	last->next = NULL;
+	if(byBorrower->length == 0){
+		byBorrower->list = NULL;
+	}
+	
+	return *byBorrower;
 }
 
 void display_found(BookList theBook) {
@@ -680,21 +726,65 @@ int borrow_book(const char *username, BookList *book_all) {
 		}
 		head = head->next;
 	}
-	
+
 	printf("\nSorry, the option you entered was invalid, please try again.\n");
 	return 1;
 }
 
 
 
-int return_book(const char *username, BookList *book_all) {
-	printf("\nBelow is the list of books you are currently borrowing:");
-	printf("\nEnter the ID number of the book you wish to return: ");
-	
-	printf("\nSorry, the option you entered was invalid, please try again.\n");
-	printf("\nReturned book successfully!\n");
-}
 
+
+int return_book(const char *username, BookList *book_all) {
+	BookList foundbook;
+	foundbook = find_book_by_borrower (username, book_all);
+	if(foundbook.list == NULL){
+		printf("\nSorry, you haven't borrowed any book.\n");
+		return 1;
+	}
+	else {
+		printf("\nBelow is the list of books you are currently borrowing:");
+		display_found(foundbook);
+	}
+	
+	char id[1024];
+	printf("\nEnter the ID number of the book you wish to return: ");
+	fgets(id, 1024, stdin);
+	
+	if(atoi(id) == 0){
+		printf("\nthe year must be a number.\n");
+		return 1;
+	}
+	
+	Book *head;
+	Loan *headl, *before;
+	head = book_all->list->next;
+	while(head != NULL){
+		if(head->id == atoi(id)){
+			headl = head->borrow->next;
+			before = head->borrow;
+			while(headl != NULL){
+				if(strcmp(headl->loan_user, username) == 0){
+					if(headl == head->borrow->next){
+						head->borrow->next = headl->next;
+					}
+					else{
+						before->next = headl->next;
+					}
+					free(headl);
+					printf("\nReturned book successfully!\n");
+					head->copies ++;
+					return 0;
+				}
+				headl = headl->next;
+				before = before->next;
+			}
+		}
+		head = head->next;
+	}
+	printf("\nSorry, the option you entered was invalid, please try again.\n");
+	return 1;
+}
 
 void userCLI(BookList *book_all, char *name) {
 	int userLoggedIn = 1;

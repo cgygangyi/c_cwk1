@@ -72,7 +72,11 @@ BookList find_book_by_author (const char *author, BookList *book_all);
 //list is the NULL pointer.
 BookList find_book_by_year (unsigned int year, BookList *book_all);
 
+BookList find_book_by_borrower (const char *borrower, BookList *book_all);
+
 void display_all(BookList *book_all);
+
+void display_found(BookList theBook);
 
 
 
