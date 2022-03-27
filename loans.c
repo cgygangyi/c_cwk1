@@ -3,11 +3,11 @@
 #include <string.h>
 
 #include "book_management.h"
-#include "utility.c"
+#include "utility.h"
 
 
-int borrow_book(const char *username, BookList *book_all) {
-	char id[1024];
+int borrow_book(const char *username, Book *book_all) {
+	char id[99];
 	printf("\nEnter the ID number of the book you wish to loan: ");
 	gets(id);
 	if(atoi(id) == 0){
@@ -15,7 +15,7 @@ int borrow_book(const char *username, BookList *book_all) {
 		return 1;
 	}
 	Book *head;
-	head = book_all->list->next;
+	head = book_all->next;
 	while(head != NULL){
 		if(head->id == atoi(id)){
 			Loan *p, *last;
@@ -43,14 +43,14 @@ int borrow_book(const char *username, BookList *book_all) {
 		}
 		head = head->next;
 	}
-
+	
 	printf("\nSorry, the option you entered was invalid, please try again.\n");
 	return 1;
 }
 
 
 
-int return_book(const char *username, BookList *book_all) {
+int return_book(const char *username, Book *book_all) {
 	BookList foundbook;
 	foundbook = find_book_by_borrower (username, book_all);
 	if(foundbook.list == NULL){
@@ -62,7 +62,7 @@ int return_book(const char *username, BookList *book_all) {
 		display_found(foundbook);
 	}
 	
-	char id[1024];
+	char id[99];
 	printf("\nEnter the ID number of the book you wish to return: ");
 	fgets(id, 1024, stdin);
 	
@@ -73,7 +73,7 @@ int return_book(const char *username, BookList *book_all) {
 	
 	Book *head;
 	Loan *headl, *before;
-	head = book_all->list->next;
+	head = book_all->next;
 	while(head != NULL){
 		if(head->id == atoi(id)){
 			headl = head->borrow->next;

@@ -4,14 +4,14 @@
 
 #include "book_management.h"
 #include "loans.h"
-#include "utility.c"
+#include "utility.h"
 
 
 
-void librarianCLI(BookList *book_all) {
+void librarianCLI(Book *book_all) {
 	int librarianLoggedIn = 1;
 	int option;
-	Book *book;
+	
 	
 	while( librarianLoggedIn ){
 		printf("\n(logged in as librarian)");
@@ -19,6 +19,7 @@ void librarianCLI(BookList *book_all) {
 		option = optionChoice();
 		
 		if( option == 1 ) {
+			Book *book;
 			book = add_book_input();
 			if(book != NULL) {
 				add_book(*book, book_all);
@@ -26,6 +27,7 @@ void librarianCLI(BookList *book_all) {
 		}
 		else if( option == 2 ) {
 			display_all(book_all);
+			Book *book;
 			book = remove_book_input();
 			if(book != NULL){
 				remove_book(*book, book_all);
@@ -47,7 +49,8 @@ void librarianCLI(BookList *book_all) {
 	return;
 }
 
-void userCLI(BookList *book_all, char *name) {
+
+void userCLI(Book *book_all, char *name) {
 	int userLoggedIn = 1;
 	int option;
 	
