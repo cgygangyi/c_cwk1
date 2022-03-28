@@ -10,13 +10,20 @@
 
 
 int reg(User *user_all) {
-	char enteredname[99];
-	char enteredpass[99];
+	char enteredname[1024];
+	char enteredpass[1024];
 	
 	User *head;
 	head = user_all->next;
 	printf("\nPlease enter a username: ");
-	gets(enteredname);
+	fgets(enteredname, 1024, stdin);
+	removeNewLine(enteredname);
+	for(int i=0; enteredname[i]; i++) {
+		if(isspace(enteredname[i])) {
+			printf("\nSorry, registration unsuccessful, the username should not contain space.\n");
+			return 1;
+		}
+	}
 	if(strcmp(enteredname, "librarian")==0){
 		printf("\nSorry, registration unsuccessful, the username you entered already exists.\n");
 		return 1;
@@ -29,12 +36,16 @@ int reg(User *user_all) {
 		head = head->next;
 	}
 	printf("\nPlease enter a passward: ");
-	gets(enteredpass);
-	
+	fgets(enteredpass, 1024, stdin);
+	removeNewLine(enteredpass);
+	if(strlen(enteredname) == 0||strlen(enteredpass) == 0){
+		printf("\nSorry, registration unsuccessful, the username or password is empty\n");
+		return 1;
+	}
 	User *New;
 	New = (User *)malloc(sizeof(User));
-	New->username = (char*)malloc(sizeof(char)*99);
-	New->password = (char*)malloc(sizeof(char)*99);
+	New->username = (char*)malloc(sizeof(char)*1024);
+	New->password = (char*)malloc(sizeof(char)*1024);
 	strcpy(New->username, enteredname);
 	strcpy(New->password, enteredpass);
 	head = user_all;
@@ -51,16 +62,18 @@ int reg(User *user_all) {
 
 
 char *login(User *user_all) {
-	char enteredname[99];
-	char enteredpass[99];
+	char enteredname[1024];
+	char enteredpass[1024];
 	User *head;
 	head = user_all->next;
 	
 	printf("\nPlease enter a username: ");
-	gets(enteredname);
+	fgets(enteredname, 1024, stdin);
+	removeNewLine(enteredname);
 	if(strcmp(enteredname, "librarian") == 0){
 		printf("\nPlease enter a passward: ");
-		gets(enteredpass);
+		fgets(enteredpass, 1024, stdin);
+		removeNewLine(enteredpass);
 		if(strcmp(enteredpass, "librarian") == 0){
 			return "librarian";
 		}
@@ -73,7 +86,8 @@ char *login(User *user_all) {
 		while(head != NULL){
 			if(strcmp(head->username, enteredname)==0){
 				printf("\nPlease enter a passward: ");
-				gets(enteredpass);
+				fgets(enteredpass, 1024, stdin);
+				removeNewLine(enteredpass);
 				if(strcmp(enteredpass, head->password) == 0){
 					return head->username;
 				}

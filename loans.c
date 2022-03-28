@@ -7,9 +7,10 @@
 
 
 int borrow_book(const char *username, Book *book_all) {
-	char id[99];
+	char id[1024];
 	printf("\nEnter the ID number of the book you wish to loan: ");
-	gets(id);
+	fgets(id, 1024, stdin);
+	removeNewLine(id);
 	if(atoi(id) == 0){
 		printf("\nyear must be a number\n");
 		return 1;
@@ -59,12 +60,13 @@ int return_book(const char *username, Book *book_all) {
 	}
 	else {
 		printf("\nBelow is the list of books you are currently borrowing:");
-		display_found(foundbook);
+		display_borrowed(foundbook);
 	}
 	
-	char id[99];
+	char id[1024];
 	printf("\nEnter the ID number of the book you wish to return: ");
 	fgets(id, 1024, stdin);
+	removeNewLine(id);
 	
 	if(atoi(id) == 0){
 		printf("\nthe year must be a number.\n");

@@ -46,7 +46,7 @@ int main( int argc, char **argv )
 		}
 		else if( option == 2 ) {
 			char *name;
-			name = (char*)malloc(sizeof(char)*99);
+			name = (char*)malloc(sizeof(char)*1024);
 			name = login(user_all);
 			if(name == NULL) {
 				//TODO

@@ -83,7 +83,7 @@ void display_all(Book *book_all);
 
 void display_found(BookList theBook);
 
-
+void display_borrowed(BookList theBook);
 
 void searchCLI(Book *book_all);
 
