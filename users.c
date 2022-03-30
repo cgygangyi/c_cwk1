@@ -8,7 +8,8 @@
 
 
 
-void librarianCLI(Book *book_all) {
+//interface for librarian
+void librarianCLI(BookList *book_all) {
 	int librarianLoggedIn = 1;
 	int option;
 	
@@ -26,7 +27,7 @@ void librarianCLI(Book *book_all) {
 			}
 		}
 		else if( option == 2 ) {
-			display_all(book_all);
+			display_found(*book_all);
 			Book *book;
 			book = remove_book_input();
 			if(book != NULL){
@@ -37,7 +38,7 @@ void librarianCLI(Book *book_all) {
 			searchCLI(book_all);
 		}
 		else if( option == 4 ) {
-			display_all(book_all);
+			display_found(*book_all);
 		}
 		else if( option == 5 ) {
 			librarianLoggedIn = 0;
@@ -50,7 +51,9 @@ void librarianCLI(Book *book_all) {
 }
 
 
-void userCLI(Book *book_all, char *name) {
+
+//interface for users
+void userCLI(BookList *book_all, char *name) {
 	int userLoggedIn = 1;
 	int option;
 	
@@ -69,7 +72,7 @@ void userCLI(Book *book_all, char *name) {
 			searchCLI(book_all);
 		}
 		else if( option == 4 ) {
-			display_all(book_all);
+			display_found(*book_all);
 		}
 		else if( option == 5 ) {
 			userLoggedIn = 0;

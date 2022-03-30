@@ -29,8 +29,8 @@ clean:
 
 # dependencies
 
-main.o: main.c book_management.h reg_log.h users.h utility.h
-book_management.o: book_management.c
+main.o: main.c book_management.h utility.h
+book_management.o: book_management.c reg_log.h users.h loans.h
 loans.o: loans.c book_management.h
 reg_log.o: reg_log.c book_management.h users.h
 users.o: users.c book_management.h loans.h users.h

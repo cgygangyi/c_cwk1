@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "book_management.h"
 #include "users.h"
@@ -8,7 +9,8 @@
 
 
 
-
+//register an account
+//returns 0 if the registration is success, or an error code otherwise
 int reg(User *user_all) {
 	char enteredname[1024];
 	char enteredpass[1024];
@@ -44,8 +46,8 @@ int reg(User *user_all) {
 	}
 	User *New;
 	New = (User *)malloc(sizeof(User));
-	New->username = (char*)malloc(sizeof(char)*1024);
-	New->password = (char*)malloc(sizeof(char)*1024);
+	New->username = (char*)malloc(sizeof(char)*(strlen(enteredname)+1));
+	New->password = (char*)malloc(sizeof(char)*(strlen(enteredpass)+1));
 	strcpy(New->username, enteredname);
 	strcpy(New->password, enteredpass);
 	head = user_all;
@@ -61,6 +63,8 @@ int reg(User *user_all) {
 
 
 
+//login
+//returns the username if the login is successful, returns NULL otherwise
 char *login(User *user_all) {
 	char enteredname[1024];
 	char enteredpass[1024];
@@ -78,7 +82,7 @@ char *login(User *user_all) {
 			return "librarian";
 		}
 		else{
-			printf("Wrong password");
+			printf("\nWrong password\n");
 			return NULL;
 		}
 	}
@@ -92,7 +96,7 @@ char *login(User *user_all) {
 					return head->username;
 				}
 				else{
-					printf("Wrong password.");
+					printf("\nWrong password.\n");
 					return NULL;
 				}
 			}

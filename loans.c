@@ -6,19 +6,26 @@
 #include "utility.h"
 
 
-int borrow_book(const char *username, Book *book_all) {
+
+//a specific user borrows a book from the library
+//returns 0 if books were borrowed successfully, or an error code otherwise
+int borrow_book(const char *username, BookList *book_all) {
 	char id[1024];
 	printf("\nEnter the ID number of the book you wish to loan: ");
 	fgets(id, 1024, stdin);
 	removeNewLine(id);
 	if(atoi(id) == 0){
-		printf("\nyear must be a number\n");
+		printf("\nID must be a number\n");
 		return 1;
 	}
 	Book *head;
-	head = book_all->next;
+	head = book_all->list->next;
 	while(head != NULL){
 		if(head->id == atoi(id)){
+			if(head->copies == 0) {
+				printf("\nSorry, this book doesn't have extra copy.\n");
+				return 1;
+			}
 			Loan *p, *last;
 			last = head->borrow->next;
 			while(last != NULL){
@@ -29,7 +36,7 @@ int borrow_book(const char *username, Book *book_all) {
 				last = last->next;
 			}
 			p = (Loan *)malloc(sizeof(Loan));
-			p->loan_user = (char*)malloc(sizeof(char));
+			p->loan_user = (char*)malloc(sizeof(char)*(strlen(username)+1));
 			strcpy(p->loan_user, username);
 			last = head->borrow;
 			while(last->next != NULL){
@@ -51,7 +58,9 @@ int borrow_book(const char *username, Book *book_all) {
 
 
 
-int return_book(const char *username, Book *book_all) {
+//a specific user returns a book to the library
+//returns 0 if books were returned successfully, or an error code otherwise
+int return_book(const char *username, BookList *book_all) {
 	BookList foundbook;
 	foundbook = find_book_by_borrower (username, book_all);
 	if(foundbook.list == NULL){
@@ -75,7 +84,7 @@ int return_book(const char *username, Book *book_all) {
 	
 	Book *head;
 	Loan *headl, *before;
-	head = book_all->next;
+	head = book_all->list->next;
 	while(head != NULL){
 		if(head->id == atoi(id)){
 			headl = head->borrow->next;
