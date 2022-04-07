@@ -31,4 +31,7 @@ users.txt format:
 ![git2](https://user-images.githubusercontent.com/101918557/161882555-4676edcc-d402-4b06-b914-e05a9cd99b0d.png)
 
 ![git1](https://user-images.githubusercontent.com/101918557/161882538-066356ff-be60-4137-9fbd-24e5e0fe1393.png)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2a41a4d394ee8f67db24a2c8cb0b2cba8952ec37
