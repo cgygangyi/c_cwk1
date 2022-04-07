@@ -25,6 +25,9 @@ void librarianCLI(BookList *book_all) {
 			if(book != NULL) {
 				add_book(*book, book_all);
 			}
+			free(book->title);
+			free(book->authors);
+			free(book);
 		}
 		else if( option == 2 ) {
 			if(display_found(*book_all, 0) == 0) {
@@ -33,6 +36,7 @@ void librarianCLI(BookList *book_all) {
 				if(book != NULL){
 					remove_book(*book, book_all);
 				}
+				free(book);
 			}
 		}
 		else if( option == 3 ) {

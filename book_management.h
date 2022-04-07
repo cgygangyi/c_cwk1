@@ -91,5 +91,7 @@ void libraryCLI(BookList* book_all, User *user_all);
 int store_users(FILE *file, User *user_all);
 int load_users(FILE *file, User *user_all);
 
+void freeBook(BookList *book_all);
 
+void freeUser(User *user_all);
 #endif

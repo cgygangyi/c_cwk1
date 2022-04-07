@@ -38,9 +38,9 @@ int main( int argc, char **argv )
 	fp = fopen("users.txt", "w+");
 	store_users(fp, user_all);
 	fclose(fp);
-
-	free(book_all);
-	free(user_all);
+	
+	freeBook(book_all);
+	freeUser(user_all);
 	
 	
 	return 0;

@@ -551,6 +551,7 @@ void searchCLI(BookList *book_all) {
 		else
 			printf("\nSorry, the option you entered was invalid, please try again.\n");
 	}
+	free(information);
 	return;
 }
 
@@ -656,4 +657,44 @@ int load_users(FILE *file, User *user_all) {
 	}
 	last->next=NULL;
 	return 0;
+}
+
+
+
+//free BookList, Book and Loan struct
+void freeBook(BookList *book_all) {
+	Book *head;
+	head = book_all->list->next;
+	while(head != NULL) {
+		free(head->title);
+		free(head->authors);
+		Loan *headl = head->borrow->next;
+		while(headl != NULL) {
+			free(headl->loan_user);
+			Loan *tmpl = headl;
+			headl = headl->next;
+			free(tmpl);
+		}
+		free(head->borrow);
+		Book *tmp = head;
+		head = head->next;
+		free(tmp);
+	}
+	free(book_all->list);
+	free(book_all);
+}
+
+
+
+//free User struct
+void freeUser(User *user_all) {
+	User* head = user_all->next;
+	while(head != NULL) {
+		free(head->username);
+		free(head->password);
+		User *tmp = head;
+		head = head->next;
+		free(tmp);
+	}
+	free(user_all);
 }
