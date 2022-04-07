@@ -137,10 +137,26 @@ Book *add_book_input() {
 	printf("Enter the author of your book you wish to add: ");
 	fgets(author, 1024, stdin);
 	removeNewLine(author);
+	
+	//error code
 	if(strlen(title) == 0 || strlen(author) == 0){
 		printf("\nSorry, the title or author you entered is empty\n");
 		New = NULL;
 		return New;
+	}
+	for(int i = 0; i < strlen(title)-1; i++) {
+		if(title[i] == ' ' && title[i+1] == ' ') {
+			printf("\nSorry, the title coudn't have two or more consecutive spaces.\n");
+			New = NULL;
+			return New;
+		}
+	}
+	for(int i = 0; i < strlen(author)-1; i++) {
+		if(author[i] == ' ' && author[i+1] == ' ') {
+			printf("\nSorry, the author coudn't have two or more consecutive spaces.\n");
+			New = NULL;
+			return New;
+		}
 	}
 
 	printf("Enter the year that your book you wish to add was released: ");
