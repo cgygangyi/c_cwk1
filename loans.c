@@ -14,8 +14,7 @@ int borrow_book(const char *username, BookList *book_all) {
 	printf("\nEnter the ID number of the book you wish to loan: ");
 	fgets(id, 1024, stdin);
 	removeNewLine(id);
-	if(atoi(id) == 0){
-		printf("\nID must be a number\n");
+	if(checkNumber(id)){
 		return 1;
 	}
 	Book *head;
@@ -77,8 +76,7 @@ int return_book(const char *username, BookList *book_all) {
 	fgets(id, 1024, stdin);
 	removeNewLine(id);
 	
-	if(atoi(id) == 0){
-		printf("\nthe year must be a number.\n");
+	if(checkNumber(id)){
 		return 1;
 	}
 	

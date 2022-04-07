@@ -35,3 +35,22 @@ void removeNewLine(char* string) {
     return;
 }
 
+
+
+//check if the char is a natural number
+//return 0 if it is a natural number, or an error code otherwise
+int checkNumber(char* string) {
+	if (strlen(string) == 0) {
+		printf("\nSorry, the input must be a natural number.\n");
+		return 1;
+	}
+	for(int i = 0; i < strlen(string); i++) {
+		if (string[i] < 48 || string[i] > 57) {
+			printf("\nSorry, the input must be a natural number.\n");
+			return 1;
+		}
+	}
+	return 0;
+	
+}
+

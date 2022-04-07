@@ -80,7 +80,7 @@ BookList find_book_by_year (unsigned int year, BookList *book_all);
 BookList find_book_by_borrower (const char *borrower, BookList *book_all);
 
 
-void display_found(BookList theBook);
+int display_found(BookList theBook);
 
 void display_borrowed(BookList theBook);
 

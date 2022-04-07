@@ -37,7 +37,7 @@ int reg(User *user_all) {
 		}
 		head = head->next;
 	}
-	printf("\nPlease enter a passward: ");
+	printf("Please enter a passward: ");
 	fgets(enteredpass, 1024, stdin);
 	removeNewLine(enteredpass);
 	if(strlen(enteredname) == 0||strlen(enteredpass) == 0){
@@ -75,34 +75,34 @@ char *login(User *user_all) {
 	fgets(enteredname, 1024, stdin);
 	removeNewLine(enteredname);
 	if(strcmp(enteredname, "librarian") == 0){
-		printf("\nPlease enter a passward: ");
+		printf("Please enter a passward: ");
 		fgets(enteredpass, 1024, stdin);
 		removeNewLine(enteredpass);
 		if(strcmp(enteredpass, "librarian") == 0){
 			return "librarian";
 		}
 		else{
-			printf("\nWrong password\n");
+			printf("\nSorry, wrong password\n");
 			return NULL;
 		}
 	}
 	else{
 		while(head != NULL){
 			if(strcmp(head->username, enteredname)==0){
-				printf("\nPlease enter a passward: ");
+				printf("Please enter a passward: ");
 				fgets(enteredpass, 1024, stdin);
 				removeNewLine(enteredpass);
 				if(strcmp(enteredpass, head->password) == 0){
 					return head->username;
 				}
 				else{
-					printf("\nWrong password.\n");
+					printf("\nSorry, wrong password.\n");
 					return NULL;
 				}
 			}
 			head = head->next;
 		}
-		printf("\nUsername does not exist.\n");
+		printf("\nSorry, username does not exist.\n");
 		return NULL;
 	}
 	

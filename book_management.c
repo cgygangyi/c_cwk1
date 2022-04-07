@@ -146,16 +146,19 @@ Book *add_book_input() {
 	printf("Enter the year that your book you wish to add was released: ");
 	fgets(year, 1024, stdin);
 	removeNewLine(year);
-	if(atoi(year) == 0 || strlen(year) == 0){
-		printf("\nyear must be a number\n");
+	if(checkNumber(year)){
+		New = NULL;
+		return New;
+	}
+	if(atoi(year) > 2022) {
+		printf("\nSorry, it's only 2022.\n");
 		New = NULL;
 		return New;
 	}
 	printf("Enter the the number of copies of your book you wish to add: ");
 	fgets(copies, 1024, stdin);
 	removeNewLine(copies);
-	if(atoi(copies) == 0 || strlen(year) == 0){
-		printf("\ncopies must be a number\n");
+	if(checkNumber(copies)){
 		New = NULL;
 		return New;
 	}
@@ -218,8 +221,7 @@ Book *remove_book_input() {
 	printf("\nEnter the ID number of the book you wish to remove: ");
 	fgets(id, 1024, stdin);
 	removeNewLine(id);
-	if(atoi(id) == 0){
-		printf("\nID must be a number\n");
+	if(checkNumber(id)){
 		theBook = NULL;
 		return theBook;
 	}
@@ -442,11 +444,13 @@ BookList find_book_by_borrower (const char *borrower, BookList *book_all) {
 
 
 
-//display all the books or the books found in find_book_by function.
-void display_found(BookList theBook) {
+//displays all the books or the books found in find_book_by function.
+//returns 0 if the library has any book, or an error code otherwies.
+int display_found(BookList theBook) {
 	Book *head;
 	if(theBook.list == NULL || theBook.list->next == NULL){
 		printf("\nSorry, no book is found.\n");
+		return 1;
 	}
 	else {
 		int longestTitle = 0;
@@ -491,6 +495,7 @@ void display_found(BookList theBook) {
 			printf("%-10d%-10d\n", head->year, head->copies);
 			head=head->next;
 		}
+		return 0;
 	}
 }
 
@@ -553,7 +558,7 @@ void searchCLI(BookList *book_all) {
 	information = (char*)malloc(sizeof(char)*1024);
 	
 	while( searching ){
-		printf("\n Please choose an option:\n 1) Find books by title\n 2) Find books by author\n 3) Find books by year\n 4) Return to previews menu\nOption: ");
+		printf("\n Please choose an option:\n 1) Find books by title\n 2) Find books by author\n 3) Find books by year\n 4) Return to previews menu\n Option: ");
 		option = optionChoice();
 		
 		if( option == 1 ) {
@@ -572,10 +577,7 @@ void searchCLI(BookList *book_all) {
 			printf("Please enter a year: ");
 			fgets(information, 1024, stdin);
 			removeNewLine(information);
-			if(atoi(information) == 0){
-				printf("\nthe year must be a number.\n");
-			}
-			else {
+			if(checkNumber(information) == 1){
 				display_found(find_book_by_year(atoi(information), book_all));
 			}
 		}

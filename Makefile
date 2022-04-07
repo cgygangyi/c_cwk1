@@ -17,10 +17,13 @@ OBJ= $(SRC:.c=.o)
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-# build executable: type 'make'
+# build executable: type 'make all'
 
 $(EXE): $(OBJ)
 	$(CC) $(OBJ) $(CLINK) -o $(EXE) 
+
+all: 
+	$(CC) $(CFLAGS) $(SRC) -o $(EXE)
 
 # clean up and remove object code and executable: type 'make clean'
 
