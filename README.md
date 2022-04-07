@@ -2,7 +2,7 @@
 The URL of the git repository: https://github.com/cgygangyi/c_cwk1.git  
   
 To build the application on linux type 'make all' on the command line in the source code folder.  
-Execute the command: './library' to run the program.  
+Execute the command: './library books.txt users.txt' to run the program.  
   
 The librarian account:  
 username: librarian  
@@ -27,7 +27,9 @@ users.txt format:
   
 [username]  
 ...  
-
+  
+Screenshots of the git commit history:  
+<img width="930" alt="git4" src="https://user-images.githubusercontent.com/101918557/162120373-a3f68dab-3833-4812-a172-69abc8d24822.png">
 
 ![git3](https://user-images.githubusercontent.com/101918557/161882565-0bbb2bc9-b93f-4066-aeaf-c0bf454ef9fb.png)
 

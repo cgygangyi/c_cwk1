@@ -9,6 +9,11 @@
 
 int main( int argc, char **argv )
 {
+	if(argc != 3 || strcmp(argv[1], "books.txt") != 0 || strcmp(argv[2], "users.txt") != 0){
+		printf("Expected use: ./library books.txt users.txt\n");
+		return 0;
+	}
+
 	//dynamically allocates linked lists
 	BookList *book_all;
 	book_all = (BookList*)malloc(sizeof(BookList));
@@ -20,11 +25,11 @@ int main( int argc, char **argv )
 	
 	//Load books and user information
 	FILE *fp;
-	fp = fopen("books.txt", "r");
+	fp = fopen(argv[1], "r");
 	load_books(fp, book_all);
 	fclose(fp);
 
-	fp = fopen("users.txt", "r");
+	fp = fopen(argv[2], "r");
 	load_users(fp, user_all);
 	fclose(fp);
 
