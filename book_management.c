@@ -446,7 +446,8 @@ BookList find_book_by_borrower (const char *borrower, BookList *book_all) {
 
 //displays all the books or the books found in find_book_by function.
 //returns 0 if the library has any book, or an error code otherwies.
-int display_found(BookList theBook) {
+//if borrow==1, copies items won't be displayed.
+int display_found(BookList theBook, int borrow) {
 	Book *head;
 	if(theBook.list == NULL || theBook.list->next == NULL){
 		printf("\nSorry, no book is found.\n");
@@ -481,7 +482,12 @@ int display_found(BookList theBook) {
 		for(int i = 0; i<longestAuthors-strlen("authors"); i++) {
 			printf(" ");
 		}
-		printf("%-10s%-10s\n", "years", "copies");
+		if(borrow == 1) {
+			printf("%-10s\n", "years");
+		}
+		else {
+			printf("%-10s%-10s\n", "years", "copies");
+		}
 		while(head!=NULL)
 		{
 			printf("%-5d%s", head->id, head->title);
@@ -492,61 +498,18 @@ int display_found(BookList theBook) {
 			for(int i = 0; i<longestAuthors-strlen(head->authors); i++) {
 				printf(" ");
 			}
-			printf("%-10d%-10d\n", head->year, head->copies);
+			if(borrow == 1) {
+				printf("%-10d\n", head->year);
+			}
+			else {
+				printf("%-10d%-10d\n", head->year, head->copies);
+			}
 			head=head->next;
 		}
 		return 0;
 	}
 }
 
-
-
-//display the borrowed books, without copies item.
-void display_borrowed(BookList theBook) {
-	Book *head;
-	int longestTitle = 0;
-	int longestAuthors = 0;
-	head = theBook.list->next;
-
-	//get the length of the longest title and authors.
-	while(head!=NULL)
-	{
-		if(strlen(head->title)>longestTitle) {
-			longestTitle = strlen(head->title);
-		}
-		if(strlen(head->authors)>longestAuthors) {
-			longestAuthors = strlen(head->authors);
-		}
-		head=head->next;
-	}
-	longestTitle += 7;
-	longestAuthors += 8;
-	head = theBook.list->next;
-	printf("\n%-5s%s", "ID", "title");
-
-	//fill in the blank to align the information to the left.
-	for(int i = 0; i<longestTitle-strlen("title"); i++) {
-		printf(" ");
-	}
-	printf("authors");
-	for(int i = 0; i<longestAuthors-strlen("authors"); i++) {
-		printf(" ");
-	}
-	printf("%-10s\n", "years");
-	while(head!=NULL)
-	{
-		printf("%-5d%s", head->id, head->title);
-		for(int i = 0; i<longestTitle-strlen(head->title); i++) {
-			printf(" ");
-		}
-		printf("%s", head->authors);
-		for(int i = 0; i<longestAuthors-strlen(head->authors); i++) {
-			printf(" ");
-		}
-		printf("%-10d\n", head->year);
-		head=head->next;
-	}
-}
 
 
 
@@ -565,20 +528,20 @@ void searchCLI(BookList *book_all) {
 			printf("Please enter a title: ");
 			fgets(information, 1024, stdin);
 			removeNewLine(information);
-			display_found(find_book_by_title(information, book_all));
+			display_found(find_book_by_title(information, book_all), 0);
 		}
 		else if( option == 2 ) {
 			printf("Please enter an author: ");
 			fgets(information, 1024, stdin);
 			removeNewLine(information);
-			display_found(find_book_by_author(information, book_all));
+			display_found(find_book_by_author(information, book_all), 0);
 		}
 		else if( option == 3 ) {
 			printf("Please enter a year: ");
 			fgets(information, 1024, stdin);
 			removeNewLine(information);
-			if(checkNumber(information) == 1){
-				display_found(find_book_by_year(atoi(information), book_all));
+			if(checkNumber(information) == 0){
+				display_found(find_book_by_year(atoi(information), book_all), 0);
 			}
 		}
 		else if( option == 4 ) {
@@ -622,7 +585,7 @@ void libraryCLI(BookList* book_all, User *user_all) {
 			searchCLI(book_all);
 		}
 		else if( option == 4 ) {
-			display_found(*book_all);
+			display_found(*book_all, 0);
 		}
 		else if( option == 5 ) {
 			libraryOpen = 0;

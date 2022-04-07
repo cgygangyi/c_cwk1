@@ -27,7 +27,7 @@ void librarianCLI(BookList *book_all) {
 			}
 		}
 		else if( option == 2 ) {
-			if(display_found(*book_all) == 0) {
+			if(display_found(*book_all, 0) == 0) {
 				Book *book;
 				book = remove_book_input();
 				if(book != NULL){
@@ -39,7 +39,7 @@ void librarianCLI(BookList *book_all) {
 			searchCLI(book_all);
 		}
 		else if( option == 4 ) {
-			display_found(*book_all);
+			display_found(*book_all, 0);
 		}
 		else if( option == 5 ) {
 			librarianLoggedIn = 0;
@@ -64,7 +64,7 @@ void userCLI(BookList *book_all, char *name) {
 		option = optionChoice();
 		
 		if( option == 1 ) {
-			if(display_found(*book_all) == 0) {
+			if(display_found(*book_all, 0) == 0) {
 				borrow_book(name, book_all);
 			}
 		}
@@ -75,7 +75,7 @@ void userCLI(BookList *book_all, char *name) {
 			searchCLI(book_all);
 		}
 		else if( option == 4 ) {
-			display_found(*book_all);
+			display_found(*book_all, 0);
 		}
 		else if( option == 5 ) {
 			userLoggedIn = 0;

@@ -68,7 +68,7 @@ int return_book(const char *username, BookList *book_all) {
 	}
 	else {
 		printf("\nBelow is the list of books you are currently borrowing:");
-		display_borrowed(foundbook);
+		display_found(foundbook, 1);
 	}
 	
 	char id[1024];
